@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FindProperty.Areas.Identity.Pages.Account
 {
@@ -36,6 +37,16 @@ namespace FindProperty.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
         }
+
+        public SelectList roleSelect = new SelectList
+        (
+            new List<SelectListItem>
+            {
+                new SelectListItem  {Selected=true, Text="Select Role", Value=""},
+                new SelectListItem  {Selected=true, Text="Customer", Value="customer"},
+                new SelectListItem  {Selected=true, Text="Admin", Value="admin"},
+            }, "Value", "Text", 1
+        );
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -61,6 +72,9 @@ namespace FindProperty.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "What is your role?")]
+            public string role { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -75,7 +89,7 @@ namespace FindProperty.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new FindPropertyUser { UserName = Input.Email, Email = Input.Email };
+                var user = new FindPropertyUser { UserName = Input.Email, Email = Input.Email, role = Input.role };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

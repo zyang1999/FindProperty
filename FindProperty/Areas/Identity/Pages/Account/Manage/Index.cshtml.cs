@@ -36,6 +36,16 @@ namespace FindProperty.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Full name")]
+            public string name { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            [Display(Name = "Birth Date")]
+            public DateTime dob { get; set; }
         }
 
         private async Task LoadAsync(FindPropertyUser user)
@@ -47,7 +57,9 @@ namespace FindProperty.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                name = user.name,
+                dob = user.dob,
             };
         }
 
@@ -87,6 +99,17 @@ namespace FindProperty.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.name != user.name)
+            {
+                user.name = Input.name;
+            }
+            if (Input.dob != user.dob)
+            {
+                user.dob = Input.dob;
+            }
+            await _userManager.UpdateAsync(user);
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
