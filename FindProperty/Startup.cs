@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +12,8 @@ using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
+using Microsoft.EntityFrameworkCore;
+using FindProperty.Data;
 
 namespace FindProperty
 {
@@ -34,6 +36,9 @@ namespace FindProperty
                 builder.AddBlobServiceClient(Configuration["ConnectionStrings:findproperty:blob"], preferMsi: true);
                 builder.AddQueueServiceClient(Configuration["ConnectionStrings:findproperty:queue"], preferMsi: true);
             });
+
+            services.AddDbContext<FindProperty1Context>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("FindProperty1Context")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

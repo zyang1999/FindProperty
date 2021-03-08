@@ -1,0 +1,72 @@
+﻿@model FindProperty.Models.Property
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Property</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="title" class="control-label"></label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="fee" class="control-label"></label>
+                <input asp-for="fee" class="form-control" />
+                <span asp-validation-for="fee" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="size" class="control-label"></label>
+                <input asp-for="size" class="form-control" />
+                <span asp-validation-for="size" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="type" class="control-label"></label>
+                <input asp-for="type" class="form-control" />
+                <span asp-validation-for="type" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="furnishing"></label>
+                <select asp-for="furnishing" class="form-control">
+                    <option value="">Select a Furnishing Type</option>
+                    <option value="Partially Furnised">Partially Furnished</option>
+                    <option value="Fullt Furnished">Fully Furnished</option>
+                </select>
+                <span asp-validation-for="furnishing" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="address" class="control-label"></label>
+                <input asp-for="address" class="form-control" />
+                <span asp-validation-for="address" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="imagePath" class="control-label"></label>
+                <input class="form-control" type="file" name="images" multiple accept="image/*" />
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

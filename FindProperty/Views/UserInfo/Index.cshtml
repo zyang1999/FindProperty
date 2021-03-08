@@ -1,0 +1,24 @@
+﻿@model IEnumerable<FindProperty.Areas.Identity.Data.FindPropertyUser>
+
+<h1 class="bg-info text-white">All Users</h1>
+<a asp-action="create" class="btn btn-secondary">Create a User</a>
+
+<table class="table table-sm table-bordered">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>UserName</th>
+        <th>Date of Birth</th>
+    </tr>
+    @foreach (FindProperty.Areas.Identity.Data.FindPropertyUser user in Model)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.name</td>
+            <td>@user.Email</td>
+            <td>@user.dob</td>
+            <td>@user.address</td>
+        </tr>
+    }
+</table>

@@ -12,6 +12,10 @@
       "type": "storage.azure",
       "connectionId": "findproperty",
       "secretStore": "LocalSecretsFile"
+    },
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "FindProperty1Context"
     }
   }
 }
