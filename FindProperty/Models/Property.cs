@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,8 +31,12 @@ namespace FindProperty.Models
         public int size { get; set; }
 
         [Required]
-        [Display(Name = "Property Type")]
+        [Display(Name = "For Sale OR Rent")]
         public string type { get; set; }
+
+        [Required]
+        [Display(Name ="Property Type")]
+        public string property_type { get; set; }
 
         [Required]
         [Display(Name = "Furnishing")]
@@ -46,13 +51,18 @@ namespace FindProperty.Models
         [Required]
         [ForeignKey("Agent")]
         [Display(Name = "Agent")]
-        public int AgentId{ get; set; }
+        public int AgentID{ get; set; }
 
         public DateTime created_at { get; set; } = DateTime.Now;
 
         [NotMapped]
         public List<string> images { get; set; } = new List<string>();
-        public virtual Agent Agent { get; set; } 
+        public virtual Agent Agent { get; set; }
+
+        [NotMapped]
+        [Required]
+        [Display(Name = "Images of the property")]
+        public List<IFormFile> imagesFiles { get; set; }
     }
 
 }

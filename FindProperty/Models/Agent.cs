@@ -11,7 +11,7 @@ namespace FindProperty.Models
 {
     public class Agent
     {
-        public int AgentId { get; set; }
+        public int AgentID { get; set; }
         
         [Required]
         [DisplayName("Name")]

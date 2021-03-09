@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FindProperty.Data;
 using FindProperty.Models;
 using FindProperty.Controllers;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace FindProperty.Views.Agents
 {
@@ -25,7 +26,12 @@ namespace FindProperty.Views.Agents
         // GET: Agents
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Agent.ToListAsync());
+            var agents = await _context.Agent.ToListAsync();
+            foreach (var agent in agents)
+            {
+                agent.profile_picture = blobsController.getBlockBlobs(agent.profile_picture).First().Uri.ToString();
+            }
+            return View(agents);
         }
 
         // GET: Agents/Details/5
@@ -37,7 +43,7 @@ namespace FindProperty.Views.Agents
             }
 
             var agent = await _context.Agent
-                .FirstOrDefaultAsync(m => m.AgentId == id);
+                .FirstOrDefaultAsync(m => m.AgentID == id);
             if (agent == null)
             {
                 return NotFound();
@@ -92,7 +98,7 @@ namespace FindProperty.Views.Agents
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AgentId,name,phone_number,profile_picture")] Agent agent)
         {
-            if (id != agent.AgentId)
+            if (id != agent.AgentID)
             {
                 return NotFound();
             }
@@ -106,7 +112,7 @@ namespace FindProperty.Views.Agents
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AgentExists(agent.AgentId))
+                    if (!AgentExists(agent.AgentID))
                     {
                         return NotFound();
                     }
@@ -129,7 +135,7 @@ namespace FindProperty.Views.Agents
             }
 
             var agent = await _context.Agent
-                .FirstOrDefaultAsync(m => m.AgentId == id);
+                .FirstOrDefaultAsync(m => m.AgentID == id);
             if (agent == null)
             {
                 return NotFound();
@@ -151,7 +157,7 @@ namespace FindProperty.Views.Agents
 
         private bool AgentExists(int id)
         {
-            return _context.Agent.Any(e => e.AgentId == id);
+            return _context.Agent.Any(e => e.AgentID == id);
         }
     }
 }

@@ -46,13 +46,26 @@ namespace FindProperty.Controllers
 
             return container;
         }
+        public void createBlockBlob(CloudBlobContainer container, IFormFile image)
+        {
+            CloudBlockBlob blob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + ".jpg");
+            using (var fileStream = image.OpenReadStream())
+            {
+                blob.UploadFromStreamAsync(fileStream).Wait();
+            }
+        }
+
+        public IEnumerable<IListBlobItem> getBlockBlobs(string containerName)
+        {
+            return getBlobStorageInformation(containerName).ListBlobsSegmentedAsync(null).Result.Results;
+        }
 
         public string uploadBlobs(List<IFormFile> images)
         {          
             CloudBlobContainer container = CreateBlobContainer();
             foreach (var image in images)
             {
-                uploadBlob(image);
+                createBlockBlob(container, image);
             }
             return container.Name;
         }
@@ -60,12 +73,7 @@ namespace FindProperty.Controllers
         public string uploadBlob(IFormFile image)
         {
             CloudBlobContainer container = CreateBlobContainer();
-            CloudBlockBlob blob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + ".jpg");
-            using (var fileStream = image.OpenReadStream())
-            {
-                blob.UploadFromStreamAsync(fileStream).Wait();
-            }
-
+            createBlockBlob(container, image);
             return container.Name;
         }
 

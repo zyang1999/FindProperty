@@ -66,6 +66,8 @@ namespace FindProperty.Views.Properties
 
             setImages(@property);
 
+            @property.Agent.profile_picture = blobsController.getBlockBlobs(@property.Agent.profile_picture).First().Uri.ToString();
+
             return View(@property);
         }
 
@@ -81,11 +83,11 @@ namespace FindProperty.Views.Properties
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,title,description,fee,size,type,furnishing,address,created_at,agent_id")] Property @property, List<IFormFile> images)
+        public async Task<IActionResult> Create([Bind("id,title,description,fee,size,type,furnishing,address,created_at,AgentID,property_type,imagesFiles")] Property @property)
         {
             if (ModelState.IsValid)
             {
-                @property.imagePath = blobsController.uploadBlobs(images);
+                @property.imagePath = blobsController.uploadBlobs(@property.imagesFiles);
                 _context.Add(@property);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -115,7 +117,7 @@ namespace FindProperty.Views.Properties
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,imagePath,AgentId,created_at")] Property @property, List<IFormFile> images)
+        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,AgentID,created_at,property_type,imagesFiles")] Property @property, List<IFormFile> images)
         {
             if (id != @property.id)
             {
