@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindProperty.Migrations.FindProperty1
 {
     [DbContext(typeof(FindProperty1Context))]
-    [Migration("20210307154315_fee")]
-    partial class fee
+    [Migration("20210309113217_AddColumnContext")]
+    partial class AddColumnContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,27 @@ namespace FindProperty.Migrations.FindProperty1
                 .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("FindProperty.Models.Appointment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("appointment_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("property_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Appointment");
+                });
 
             modelBuilder.Entity("FindProperty.Models.Property", b =>
                 {

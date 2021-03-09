@@ -14,6 +14,10 @@
     "mssql2": {
       "type": "mssql",
       "connectionId": "FindProperty1Context"
+    },
+    "storage2": {
+      "type": "storage",
+      "connectionId": "BlobStorageConnection"
     }
   }
 }

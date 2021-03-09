@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindProperty.Migrations.FindProperty1
 {
     [DbContext(typeof(FindProperty1Context))]
-    [Migration("20210307102048_image")]
-    partial class image
+    [Migration("20210308121131_AppointmentContext")]
+    partial class AppointmentContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,15 +40,14 @@ namespace FindProperty.Migrations.FindProperty1
                         .HasColumnType("nvarchar(60)")
                         .HasMaxLength(60);
 
-                    b.Property<decimal>("fee")
-                        .HasColumnType("decimal(18,3)");
+                    b.Property<int>("fee")
+                        .HasColumnType("int");
 
                     b.Property<string>("furnishing")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("imagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("size")

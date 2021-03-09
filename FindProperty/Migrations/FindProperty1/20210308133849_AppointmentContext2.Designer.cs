@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindProperty.Migrations.FindProperty1
 {
     [DbContext(typeof(FindProperty1Context))]
-    [Migration("20210307085427_Initial")]
-    partial class Initial
+    [Migration("20210308133849_AppointmentContext2")]
+    partial class AppointmentContext2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,27 @@ namespace FindProperty.Migrations.FindProperty1
                 .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("FindProperty.Models.Appointment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("appointment_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("property_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Appointment");
+                });
 
             modelBuilder.Entity("FindProperty.Models.Property", b =>
                 {
@@ -40,11 +61,14 @@ namespace FindProperty.Migrations.FindProperty1
                         .HasColumnType("nvarchar(60)")
                         .HasMaxLength(60);
 
-                    b.Property<decimal>("fee")
-                        .HasColumnType("decimal(18,3)");
+                    b.Property<int>("fee")
+                        .HasColumnType("int");
 
                     b.Property<string>("furnishing")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("imagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("size")

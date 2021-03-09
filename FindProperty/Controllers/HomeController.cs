@@ -28,6 +28,15 @@ namespace FindProperty.Controllers
             return View();
         }
 
+        public IActionResult Property_Detail()
+        {
+            return View();
+        }
+
+        public IActionResult Properties(){
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

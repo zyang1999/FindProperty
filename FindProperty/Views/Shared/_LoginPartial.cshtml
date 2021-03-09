@@ -16,7 +16,7 @@
             </form>
         </li>
 
-        @if (UserManager.GetUserAsync(User).Result.role == "Admin")
+        @if (UserManager.GetUserAsync(User).Result.role == "admin")
         {
             <li class="nav-item">
                 <a id="manage" class="nav-link text-dark" asp-controller="Properties" asp-action="Index">Properties</a>

@@ -1,0 +1,43 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<FindProperty.Models.Property>
+@{
+    ViewData["Title"] = "Properties";
+}
+@foreach (var item in Model)
+{
+<div class="card" style="max-width:900px;margin-top:30px;margin-bottom:50px;">
+    <a href="Product_Detail.cshtml?property_ID=<%#:item.id%>" style="text-decoration:none;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img style="min-height:220px;" src="" class="card-img">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h6 class="crop-text-2" style="font-weight:900;"></h6>
+                    <div class="row" style="font-size:15px;">
+                        <i class="fas fa-map-marker-alt pl-3 pt-1"></i>
+                        <p class="pl-2"></p>
+                    </div>
+                    <div class="row pt-0" style="font-size:15px;">
+                        <i class="fas fa-university pl-3 pt-1"></i>
+                        <p class="pl-2" style="max-width:300px;"></p>
+                    </div>
+                    <div class="row pt-0" style="font-size:15px;">
+                        <i class="fas fa-bed pl-3 pt-1"></i>
+                        <p class="pl-2" style="max-width:300px;"></p>
+                    </div>
+                    <div class="row pt-0" style="font-size:15px;">
+                        <i class="fas fa-plus-square pl-3 pt-1 d-inline-block"></i>
+                        <div class="d-inline-block">
+                            <p class="pl-2 crop-text-1" style="max-width:400px;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+}
+

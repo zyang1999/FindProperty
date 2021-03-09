@@ -13,6 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.Designer.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.1.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.2.0" />

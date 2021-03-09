@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FindProperty.Migrations.FindProperty1
 {
-    public partial class Initial : Migration
+    public partial class intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,11 +15,12 @@ namespace FindProperty.Migrations.FindProperty1
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(maxLength: 60, nullable: false),
                     description = table.Column<string>(maxLength: 60, nullable: false),
-                    fee = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    fee = table.Column<int>(nullable: false),
                     size = table.Column<int>(nullable: false),
                     type = table.Column<string>(nullable: false),
                     furnishing = table.Column<string>(nullable: false),
                     address = table.Column<string>(nullable: false),
+                    imagePath = table.Column<string>(nullable: true),
                     status = table.Column<string>(nullable: true),
                     created_at = table.Column<DateTime>(nullable: false)
                 },
