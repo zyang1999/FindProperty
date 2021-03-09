@@ -31,16 +31,23 @@ namespace FindProperty.Views.Properties
             var properties = await _context.Property.ToListAsync();
             foreach (var property in properties)
             {
-                CloudBlobContainer container = blobsController.getBlobStorageInformation(property.imagePath);
-                BlobResultSegment result = container.ListBlobsSegmentedAsync(null).Result;
-                foreach (IListBlobItem item in result.Results)
-                {
-                    property.images.Add(((CloudBlockBlob)item).Uri.ToString());
-                }
+                setImages(property);
             }
-            
+
             return View(properties);
         }
+
+        //get images from blob storage
+        public void setImages(Property property)
+        {
+            CloudBlobContainer container = blobsController.getBlobStorageInformation(property.imagePath);
+            BlobResultSegment result = container.ListBlobsSegmentedAsync(null).Result;
+            foreach (IListBlobItem item in result.Results)
+            {
+                property.images.Add(((CloudBlockBlob)item).Uri.ToString());
+            }
+        }
+
 
         // GET: Properties/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -50,12 +57,14 @@ namespace FindProperty.Views.Properties
                 return NotFound();
             }
 
-            var @property = await _context.Property
+            var @property = await _context.Property.Include(x => x.Agent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (@property == null)
             {
                 return NotFound();
             }
+
+            setImages(@property);
 
             return View(@property);
         }
@@ -63,6 +72,7 @@ namespace FindProperty.Views.Properties
         // GET: Properties/Create
         public IActionResult Create()
         {
+            ViewData["Agents"] = _context.Agent.ToList();
             return View();
         }
 
@@ -71,11 +81,11 @@ namespace FindProperty.Views.Properties
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,title,description,fee,size,type,furnishing,address,status,imagePath,created_at")] Property @property, List<IFormFile> images)
+        public async Task<IActionResult> Create([Bind("id,title,description,fee,size,type,furnishing,address,created_at,agent_id")] Property @property, List<IFormFile> images)
         {
             if (ModelState.IsValid)
             {
-                @property.imagePath = blobsController.uploadBlob(images);
+                @property.imagePath = blobsController.uploadBlobs(images);
                 _context.Add(@property);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -96,6 +106,7 @@ namespace FindProperty.Views.Properties
             {
                 return NotFound();
             }
+            ViewData["Agents"] = _context.Agent.ToList();
             return View(@property);
         }
 
@@ -104,7 +115,7 @@ namespace FindProperty.Views.Properties
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,imagePath,created_at")] Property @property)
+        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,imagePath,AgentId,created_at")] Property @property, List<IFormFile> images)
         {
             if (id != @property.id)
             {
@@ -115,6 +126,10 @@ namespace FindProperty.Views.Properties
             {
                 try
                 {
+                    if (images.Any())
+                    {
+                        @property.imagePath = blobsController.editBlob(@property.imagePath, images);
+                    }
                     _context.Update(@property);
                     await _context.SaveChangesAsync();
                 }
@@ -142,7 +157,7 @@ namespace FindProperty.Views.Properties
                 return NotFound();
             }
 
-            var @property = await _context.Property
+            var @property = await _context.Property.Include(x => x.Agent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (@property == null)
             {
@@ -158,6 +173,7 @@ namespace FindProperty.Views.Properties
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @property = await _context.Property.FindAsync(id);
+            blobsController.deleteBlob(@property.imagePath);
             _context.Property.Remove(@property);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

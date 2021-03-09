@@ -18,7 +18,6 @@ namespace FindProperty.Models
         public string title { get; set; }
 
         [Required]
-        [StringLength(60, ErrorMessage = "The description should be between 3 to 60 words", MinimumLength = 3)]
         [Display(Name = "Description")]
         public string description { get; set; }
 
@@ -42,14 +41,18 @@ namespace FindProperty.Models
         [Display(Name = "Address")]
         public string address { get; set; }
 
-        [Display(Name = "Images")]
         public string imagePath { get; set; }
 
-        public string status { get; set; } = "ACTIVE";
+        [Required]
+        [ForeignKey("Agent")]
+        [Display(Name = "Agent")]
+        public int AgentId{ get; set; }
+
         public DateTime created_at { get; set; } = DateTime.Now;
 
         [NotMapped]
         public List<string> images { get; set; } = new List<string>();
+        public virtual Agent Agent { get; set; } 
     }
 
 }

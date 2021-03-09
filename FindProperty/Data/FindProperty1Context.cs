@@ -15,5 +15,6 @@ namespace FindProperty.Data
         }
 
         public DbSet<FindProperty.Models.Property> Property { get; set; }
+        public DbSet<FindProperty.Models.Agent> Agent { get; set; }
     }
 }

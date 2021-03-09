@@ -10,62 +10,84 @@
 <div>
     <h4>Property</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.fee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fee)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.size)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.size)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.furnishing)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.furnishing)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_at)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_at)
-        </dd>
-    </dl>
+    @{var target = "#carousel" + Model.id.ToString();
+        var id = "carousel" + Model.id.ToString(); }
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="mb-1">
+                <div id="@id" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="@target" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        @for (int i = 1; i < Model.images.Count; i++)
+                        {
+                            <button type="button" data-bs-target="@target" data-bs-slide-to="@i" aria-label="Slide @i+1"></button>
+                        }
+                    </div>
+                    <div class="carousel-inner" style="color: dimgray">
+                        @for (int i = 0; i < Model.images.Count(); i++)
+                        {
+                            if (i == 0)
+                            {
+                                <div class="carousel-item active">
+                                    <img src="@Model.images[i]" class="d-block" style="height:250px">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    <img src="@Model.images[i]" class="d-block" style="height:250px">
+                                </div>
+                            }
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="@target" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="@target" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <h4 class="card-title my-3">RM @Model.fee</h4>
+            <div class="my-3">
+                <h4 mb-1 text-muted">@Model.title</h4>
+                <h5>@Model.address</h5>
+            </div>
+            <p class="card-subtitle my-3">@Model.type | Built-up : @Model.size sq. ft. | @Model.furnishing</p>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4 class="card-title my-3">@Model.title</h4>
+            <p>@Model.description</p>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4>Property Details</h4>
+            <hr />
+            <label>Property Type:</label>
+            <p>@Model.type</p>
+            <label>Built-up Size:</label>
+            <p>@Model.size sq. ft.</p>
+            <label>Furnshing</label>
+            <p>@Model.furnishing</p>
+            <label>Posted Date:</label>
+            <p>@Model.created_at</p>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4>Agent</h4>
+            <hr />
+            <label>Name:</label>
+            <p>@Model.Agent.name</p>
+            <label>Contact Number:</label>
+            <p>@Model.Agent.phone_number</p>
+        </div>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |

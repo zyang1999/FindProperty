@@ -36,34 +36,50 @@ namespace FindProperty.Controllers
             return container;
         }
 
-        public ActionResult CreateBlobContainer(string blobRef)
+        public CloudBlobContainer CreateBlobContainer()
         {
             //refer to the container
+            var blobRef = Guid.NewGuid().ToString();
             CloudBlobContainer container = getBlobStorageInformation(blobRef);
-            ViewBag.Success = container.CreateIfNotExistsAsync().Result;
-            ViewBag.BlobContainerName = container.Name;
-            return View();
-        }
-
-        public string uploadBlob(List<IFormFile> images)
-        {
-
-            CloudBlobContainer container = getBlobStorageInformation(Guid.NewGuid().ToString());
             container.CreateIfNotExistsAsync().Wait();
             container.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
 
-            foreach (var image in images)
-            {
-                CloudBlockBlob blob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + ".jpg");
-                using (var fileStream = image.OpenReadStream())
-                {
-                    blob.UploadFromStreamAsync(fileStream).Wait();
-                }
-            }
-
-            return container.Uri.ToString();
+            return container;
         }
 
+        public string uploadBlobs(List<IFormFile> images)
+        {          
+            CloudBlobContainer container = CreateBlobContainer();
+            foreach (var image in images)
+            {
+                uploadBlob(image);
+            }
+            return container.Name;
+        }
+
+        public string uploadBlob(IFormFile image)
+        {
+            CloudBlobContainer container = CreateBlobContainer();
+            CloudBlockBlob blob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + ".jpg");
+            using (var fileStream = image.OpenReadStream())
+            {
+                blob.UploadFromStreamAsync(fileStream).Wait();
+            }
+
+            return container.Name;
+        }
+
+        public string editBlob(string blobRef, List<IFormFile> images)
+        {
+            deleteBlob(blobRef);
+            return uploadBlobs(images);
+        }
+
+        public void deleteBlob(string blobRef)
+        {
+            CloudBlobContainer container = getBlobStorageInformation(blobRef);
+            container.DeleteIfExistsAsync().Wait();
+        }
 
     }
 }

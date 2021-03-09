@@ -1,8 +1,8 @@
 ﻿@model FindProperty.Models.Property
-
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var agents = (List<Agent>)ViewData["Agents"];
 }
 
 <h1>Create</h1>
@@ -20,7 +20,7 @@
             </div>
             <div class="mb-3">
                 <label asp-for="description" class="control-label"></label>
-                <input asp-for="description" class="form-control" />
+                <textarea asp-for="description" class="form-control"></textarea>
                 <span asp-validation-for="description" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -41,7 +41,7 @@
             <div class="mb-3">
                 <label asp-for="furnishing"></label>
                 <select asp-for="furnishing" class="form-control">
-                    <option value="">Select a Furnishing Type</option>
+                    <option selected value="">Select a Furnishing Type</option>
                     <option value="Partially Furnised">Partially Furnished</option>
                     <option value="Fullt Furnished">Fully Furnished</option>
                 </select>
@@ -51,6 +51,17 @@
                 <label asp-for="address" class="control-label"></label>
                 <input asp-for="address" class="form-control" />
                 <span asp-validation-for="address" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="AgentId" class="control-label"></label>
+                <select asp-for="AgentId" class="form-control">
+                    <option selected value="">Select an agent</option>
+                    @foreach (var agent in agents)
+                    {
+                        <option value="@agent.AgentId">@agent.name</option>
+                    }
+                </select>
+                <span asp-validation-for="AgentId" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="imagePath" class="control-label"></label>
