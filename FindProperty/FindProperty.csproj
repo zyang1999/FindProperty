@@ -17,6 +17,10 @@
     <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.Designer.cs" />
     <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.cs" />
     <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.Designer.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210309114601_AgentContext.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210309114601_AgentContext.Designer.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210309121048_AgentContext2.cs" />
+    <Compile Remove="Migrations\FindProperty1\20210309121048_AgentContext2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

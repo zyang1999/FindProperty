@@ -1,8 +1,8 @@
 ﻿@model FindProperty.Models.Property
-
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var agents = (List<Agent>)ViewData["Agents"];
 }
 
 <h1>Create</h1>
@@ -20,7 +20,7 @@
             </div>
             <div class="mb-3">
                 <label asp-for="description" class="control-label"></label>
-                <input asp-for="description" class="form-control" />
+                <textarea asp-for="description" class="form-control"></textarea>
                 <span asp-validation-for="description" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -35,26 +35,59 @@
             </div>
             <div class="mb-3">
                 <label asp-for="type" class="control-label"></label>
-                <input asp-for="type" class="form-control" />
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" asp-for="type" autocomplete="off" checked value="Sale"> For Sale
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" asp-for="type" autocomplete="off" value="Rent"> For Rent
+                    </label>
+                </div>
                 <span asp-validation-for="type" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="property_type" class="control-label"></label>
+                <select asp-for="property_type" class="form-control">
+                    <option selected value="">Select a Property Type</option>
+                    <option value="Semi-Detached (Semi-D)">Semi-Detached (Semi-D)</option>
+                    <option value="Condominium ">Condominium </option>
+                    <option value="Serviced residence ">Serviced residence </option>
+                    <option value="Duplex ">Duplex </option>
+                    <option value="Studio ">Studio </option>
+                    <option value="Apartment ">Apartment </option>
+                    <option value="Bungalow ">Bungalow </option>
+                </select>
+                <span asp-validation-for="property_type" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="furnishing"></label>
                 <select asp-for="furnishing" class="form-control">
-                    <option value="">Select a Furnishing Type</option>
+                    <option selected value="">Select a Furnishing Type</option>
                     <option value="Partially Furnised">Partially Furnished</option>
-                    <option value="Fullt Furnished">Fully Furnished</option>
+                    <option value="Fully Furnished">Fully Furnished</option>
                 </select>
                 <span asp-validation-for="furnishing" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="address" class="control-label"></label>
-                <input asp-for="address" class="form-control" />
+                <textarea asp-for="address" class="form-control"></textarea>
                 <span asp-validation-for="address" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="imagePath" class="control-label"></label>
-                <input class="form-control" type="file" name="images" multiple accept="image/*" />
+                <label asp-for="AgentID" class="control-label"></label>
+                <select asp-for="AgentID" class="form-control">
+                    <option selected value="">Select an agent</option>
+                    @foreach (var agent in agents)
+                    {
+                        <option value="@agent.AgentID">@agent.name</option>
+                    }
+                </select>
+                <span asp-validation-for="AgentID" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="imagesFiles" class="control-label"></label>
+                <input asp-for="imagesFiles" class="form-control" type="file" multiple accept="image/*" />
+                <span asp-validation-for="imagesFiles" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />

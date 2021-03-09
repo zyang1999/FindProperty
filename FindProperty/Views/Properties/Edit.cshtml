@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Agent> agents = (List<Agent>)ViewData["Agents"];
 }
 
 <h1>Edit</h1>
@@ -11,9 +12,10 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
+            <input type="hidden" asp-for="imagePath" />
             <div class="form-group">
                 <label asp-for="title" class="control-label"></label>
                 <input asp-for="title" class="form-control" />
@@ -21,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="description" class="control-label"></label>
-                <input asp-for="description" class="form-control" />
+                <textarea asp-for="description" class="form-control"></textarea>
                 <span asp-validation-for="description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,30 +36,61 @@
                 <input asp-for="size" class="form-control" />
                 <span asp-validation-for="size" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label asp-for="type" class="control-label"></label>
-                <input asp-for="type" class="form-control" />
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" asp-for="type" autocomplete="off" checked> For Sale
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" asp-for="type" autocomplete="off"> For Rent
+                    </label>
+                </div>
                 <span asp-validation-for="type" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="property_type" class="control-label"></label>
+                <select asp-for="property_type" class="form-control">
+                    <option selected value="">Select a Property Type</option>
+                    <option value="Semi-Detached (Semi-D)">Semi-Detached (Semi-D)</option>
+                    <option value="Condominium ">Condominium </option>
+                    <option value="Serviced residence ">Serviced residence </option>
+                    <option value="Duplex ">Duplex </option>
+                    <option value="Studio ">Studio </option>
+                    <option value="Apartment ">Apartment </option>
+                    <option value="Bungalow ">Bungalow </option>
+                </select>
+                <span asp-validation-for="property_type" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="furnishing" class="control-label"></label>
-                <input asp-for="furnishing" class="form-control" />
+                <select asp-for="furnishing" class="form-control">
+                    <option value="">Select a Furnishing Type</option>
+                    <option value="Partially Furnised">Partially Furnished</option>
+                    <option value="Fully Furnished">Fully Furnished</option>
+                </select>
                 <span asp-validation-for="furnishing" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="address" class="control-label"></label>
-                <input asp-for="address" class="form-control" />
+                <textarea asp-for="address" class="form-control"></textarea>
                 <span asp-validation-for="address" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="status" class="control-label"></label>
-                <input asp-for="status" class="form-control" />
-                <span asp-validation-for="status" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="AgentID" class="control-label"></label>
+                <select asp-for="AgentID" class="form-control">
+                    <option selected value="">Select an agent</option>
+                    @foreach (var agent in agents)
+                    {
+                        <option value="@agent.AgentID">@agent.name</option>
+                    }
+                </select>
+                <span asp-validation-for="AgentID" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="created_at" class="control-label"></label>
-                <input asp-for="created_at" class="form-control" />
-                <span asp-validation-for="created_at" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="imagesFiles" class="control-label"></label>
+                <input asp-for="imagesFiles" class="form-control" type="file" multiple accept="image/*" />
+                <span asp-validation-for="imagesFiles" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
