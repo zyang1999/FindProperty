@@ -5,37 +5,61 @@
 }
 @foreach (var item in Model)
 {
-<div class="card" style="max-width:900px;margin-top:30px;margin-bottom:50px;">
-    <a href="Product_Detail.cshtml?property_ID=<%#:item.id%>" style="text-decoration:none;">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-                <img style="min-height:220px;" src="" class="card-img">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h6 class="crop-text-2" style="font-weight:900;"></h6>
-                    <div class="row" style="font-size:15px;">
-                        <i class="fas fa-map-marker-alt pl-3 pt-1"></i>
-                        <p class="pl-2"></p>
-                    </div>
-                    <div class="row pt-0" style="font-size:15px;">
-                        <i class="fas fa-university pl-3 pt-1"></i>
-                        <p class="pl-2" style="max-width:300px;"></p>
-                    </div>
-                    <div class="row pt-0" style="font-size:15px;">
-                        <i class="fas fa-bed pl-3 pt-1"></i>
-                        <p class="pl-2" style="max-width:300px;"></p>
-                    </div>
-                    <div class="row pt-0" style="font-size:15px;">
-                        <i class="fas fa-plus-square pl-3 pt-1 d-inline-block"></i>
-                        <div class="d-inline-block">
-                            <p class="pl-2 crop-text-1" style="max-width:400px;"></p>
+    var target = "#carousel" + item.id.ToString();
+    var id = "carousel" + item.id.ToString();
+   
+<div class="card mb-3">
+    <a href="/Property/@item.id">
+        <div class="card-body d-flex flex-row">
+            <div class="container flex-grow-5">
+                <div class="mb-1">
+                    <div id="@id" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
+                        <ol class="carousel-indicators">
+                            <li type="button" data-target="@target" data-slide-to="0" class="active"></li>
+                            @for (int i = 1; i < item.images.Count; i++)
+                            {
+                                <li type="button" data-target="@target" data-slide-to="@i"></li>
+                            }
+                        </ol>
+                        <div class="carousel-inner" style="background-color:dimgray">
+                            @for (int i = 0; i < item.images.Count(); i++)
+                            {
+                                if (i == 0)
+                                {
+                                    <div class="carousel-item active text-center" style="width:500px; height: 250px;">
+                                        <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="carousel-item text-center" style="width:500px; height: 250px;">
+                                        <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
+                                    </div>
+                                }
+                            }
                         </div>
+                        <a class="carousel-control-prev" href="@target" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="@target" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
+                </div>
+            </div>
+            <div class="container flex-grow-5">
+                <h4 class="card-title my-3">@item.type</h4>
+                <h4 class="card-title my-3">RM @item.fee</h4>
+                <div class="my-3">
+                    <h4 mb-1 text-muted">@item.title</h4>
+                    <h5>@item.address</h5>
+                    <p class="card-subtitle my-3">@item.type | Built-up : @item.size sq. ft. | @item.furnishing</p>
                 </div>
             </div>
         </div>
     </a>
 </div>
-}
+ }
 

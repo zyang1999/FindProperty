@@ -16,6 +16,8 @@ namespace FindProperty.Models
 
         public DateTime appointment_date{get;set;}
 
+        public string hour { get; set; }
 
+        public string status { get; set; }
     }
 }

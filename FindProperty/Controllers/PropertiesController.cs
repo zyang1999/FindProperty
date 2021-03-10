@@ -37,6 +37,15 @@ namespace FindProperty.Views.Properties
             return View(properties);
         }
 
+        [Route("Property/{id}")]
+        public async Task<IActionResult> Properties_Detail(int id)
+        {
+            var property = await _context.Property.Where(p=> p.id == id).FirstOrDefaultAsync();
+            
+            setImages(property);
+            return View(property);
+        }
+
         // GET: Properties
         public async Task<IActionResult> Index()
         {
