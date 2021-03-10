@@ -4,14 +4,16 @@ using FindProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FindProperty.Migrations.FindProperty1
 {
     [DbContext(typeof(FindProperty1Context))]
-    partial class FindProperty1ContextModelSnapshot : ModelSnapshot
+    [Migration("20210310133819_AppointmentNewContext")]
+    partial class AppointmentNewContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

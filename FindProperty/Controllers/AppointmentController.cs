@@ -39,12 +39,11 @@ namespace FindProperty.Controllers
                 return Redirect("/Identity/Account/Login");
             }
 
-            var property = _context.Where()
-            if ()
-            {
+            
+            
                 var userid = _userManager.GetUserId(HttpContext.User);
                 _context.Appointment.Add(appointment);
-            }
+            
                
             
             return View("PropertiesDetail");
