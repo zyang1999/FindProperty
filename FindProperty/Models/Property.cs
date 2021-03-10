@@ -63,6 +63,9 @@ namespace FindProperty.Models
         [Required]
         [Display(Name = "Images of the property")]
         public List<IFormFile> imagesFiles { get; set; }
+
+        [NotMapped]
+        public SelectList propertiesList { get; set; }
     }
 
 }

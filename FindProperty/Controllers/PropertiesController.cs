@@ -37,15 +37,36 @@ namespace FindProperty.Views.Properties
             return View(properties);
         }
 
+        [Route("Property/{id}")]
+        public async Task<IActionResult> Properties_Detail(int id)
+        {
+            var property = await _context.Property.Where(p => p.id == id).FirstOrDefaultAsync();
+
+            setImages(property);
+            return View(property);
+        }
+
         // GET: Properties
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string propertyType, string searchString)
         {
             var properties = await _context.Property.ToListAsync();
+            
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                properties = await _context.Property.Where(s => s.title.Contains(searchString)).ToListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(propertyType))
+            {
+                properties = await _context.Property.Where(x => x.property_type == propertyType).ToListAsync();
+            }
+
             foreach (var property in properties)
             {
                 setImages(property);
             }
 
+            ViewBag.PropertyType = new SelectList(await _context.Property.Select(x => x.property_type).ToListAsync());
             return View(properties);
         }
 
@@ -120,6 +141,7 @@ namespace FindProperty.Views.Properties
             {
                 return NotFound();
             }
+            setImages(@property);
             ViewData["Agents"] = _context.Agent.ToList();
             return View(@property);
         }
@@ -129,7 +151,7 @@ namespace FindProperty.Views.Properties
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,AgentID,created_at,property_type,imagesFiles")] Property @property, List<IFormFile> images)
+        public async Task<IActionResult> Edit(int id, [Bind("id,title,description,fee,size,type,furnishing,address,status,imagePath,AgentID,created_at,property_type,imagesFiles")] Property @property)
         {
             if (id != @property.id)
             {
@@ -140,9 +162,9 @@ namespace FindProperty.Views.Properties
             {
                 try
                 {
-                    if (images.Any())
+                    if (@property.imagesFiles.Any())
                     {
-                        @property.imagePath = blobsController.editBlob(@property.imagePath, images);
+                        @property.imagePath = blobsController.editBlob(@property.imagePath, @property.imagesFiles);
                     }
                     _context.Update(@property);
                     await _context.SaveChangesAsync();
@@ -187,7 +209,7 @@ namespace FindProperty.Views.Properties
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @property = await _context.Property.FindAsync(id);
-            blobsController.deleteBlob(@property.imagePath);
+            blobsController.deleteBlobContainer(@property.imagePath);
             _context.Property.Remove(@property);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -198,6 +220,12 @@ namespace FindProperty.Views.Properties
             return _context.Property.Any(e => e.id == id);
         }
 
-        
+        [HttpPost]
+        public void deleteImage(string image, int id)
+        {
+            var property = _context.Property.FindAsync(id).Result;
+            blobsController.deleteBlockBlob(image, property.imagePath);
+            setImages(property);
+        }
     }
 }
