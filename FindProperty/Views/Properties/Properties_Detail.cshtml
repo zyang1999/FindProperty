@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewData["Title"] = "Property Detail Page";
+}
+@model Property
+
+<div class="card mb-3">
+
+
+
+    <div class="container" style="margin-bottom:100px;">
+        <div class="row">
+            <div class="col-md-5 pr-2 d-inline-block mt-5" style="">
+             
+     
+                  @{
+                   var target = "#carousel" + Model.id.ToString();
+                   var id = "carousel" + Model.id.ToString();
+                   }
+                     <div class="mb-1">
+                        <div id="@id" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
+                            <ol class="carousel-indicators">
+                                <li type="button" data-target="@target" data-slide-to="0" class="active"></li>
+                                @for (int i = 1; i < Model.images.Count; i++)
+                                {
+                                    <li type="button" data-target="@target" data-slide-to="@i"></li>
+                                }
+                            </ol>
+                            <div class="carousel-inner" style="background-color:dimgray">
+                                @for (int i = 0; i < Model.images.Count(); i++)
+                                {
+                                    if (i == 0)
+                                    {
+                                        <div class="carousel-item active text-center" style="width:500px; height: 250px;">
+                                            <img src="@Model.images[i]" style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item text-center" style="width:500px; height: 250px;">
+                                            <img src="@Model.images[i]" style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <a class="carousel-control-prev" href="@target" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="@target" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+              
+                
+                        <div class="col-md-5 ml-3 mt-5" style="background-color:white;max-height:450px;display:inline-block;border:1px solid #e2e2e2;">
+                            <form asp-action="Insert" asp-controller="Appointment" method="post">
+                                <h5 class="pt-2" style="font-weight:700;">@Model.title</h5>
+                                <div class="row">
+                                    <div class="col-sm-1  pl-3 pt-1">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <p class="pl-2 pt-1">@Model.address</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-1  pl-3 pt-1">
+                                        <i class="fas fa-square pl-3 pt-1"></i>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <p class="pl-2 pt-1">@Model.size sq. ft.</p>
+                                    </div>
+                                </div>
+                                <div class="row pt-1 pl-3">
+                                    <p style="font-weight:700;font-size:40px;">RM @Model.fee</p>
+                                </div>
+                                <div class="row pt-1 pl-3">
+                                    <div class="col-sm-1">
+                                        <label style="font-weight:700;">Type:</label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <p style="font-weight:700;padding-left:20px;">@Model.type</p>
+                                    </div>
+                                </div>
+                                @*<button data-toggle="modal" data-target="#exampleModal" class="col-4 offset-4 mb-3" style="cursor:pointer;height:50px;border-radius:30px;color:white;background-color:blue;">
+                            Booking
+                        </button>*@
+                                <div class="" col-4 offset-4 mb-3">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" class="mx-auto">
+                                        Booking
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Booking Detail</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group" style="text-align:center;">
+                                                    <label>Booking Date:</label> <input class="mx-auto" name="date" id="date" type="date" required>
+                                                    <label>Booking Time:</label>
+                                                    <select name="hour" id="hour">
+                                                        <option value="10am">10am</option>
+                                                        <option value="11am">11am</option>
+                                                        <option value="12pm">12pm</option>
+                                                        <option value="1pm">1pm</option>
+                                                        <option value="2pm">2pm</option>
+                                                        <option value="3pm">3pm</option>
+                                                        <option value="4pm">4pm</option>
+                                                        <option value="5pm">5pm</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="hidden" id="property_id" value="">
+                                                <input type="hidden" id="booking_date" value="date">
+                                                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                </div>
+
+            </div>
+
+
+
