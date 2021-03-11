@@ -69,6 +69,7 @@ namespace FindProperty
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
         }
     }
     internal static class StartupExtensions
