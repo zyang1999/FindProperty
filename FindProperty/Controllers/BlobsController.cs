@@ -54,7 +54,6 @@ namespace FindProperty.Controllers
                 blob.UploadFromStreamAsync(fileStream).Wait();
             }
         }
-
         public IEnumerable<IListBlobItem> getBlockBlobs(string containerName)
         {
             return getBlobStorageInformation(containerName).ListBlobsSegmentedAsync(null).Result.Results;
@@ -79,14 +78,20 @@ namespace FindProperty.Controllers
 
         public string editBlob(string blobRef, List<IFormFile> images)
         {
-            deleteBlob(blobRef);
+            deleteBlobContainer(blobRef);
             return uploadBlobs(images);
         }
 
-        public void deleteBlob(string blobRef)
+        public void deleteBlobContainer(string blobRef)
         {
             CloudBlobContainer container = getBlobStorageInformation(blobRef);
             container.DeleteIfExistsAsync().Wait();
+        }
+
+        public void deleteBlockBlob (string blobRef, string storageRef)
+        {
+            getBlobStorageInformation(storageRef).GetBlockBlobReference(new CloudBlockBlob(new Uri(blobRef)).Name).DeleteIfExistsAsync().Wait();
+
         }
 
     }

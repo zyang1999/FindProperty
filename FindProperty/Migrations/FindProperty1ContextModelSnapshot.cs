@@ -4,22 +4,43 @@ using FindProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace FindProperty.Migrations.FindProperty1
+namespace FindProperty.Migrations
 {
     [DbContext(typeof(FindProperty1Context))]
-    [Migration("20210309113217_AddColumnContext")]
-    partial class AddColumnContext
+    partial class FindProperty1ContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("FindProperty.Models.Agent", b =>
+                {
+                    b.Property<int>("AgentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("phone_number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("profile_picture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AgentID");
+
+                    b.ToTable("Agent");
+                });
 
             modelBuilder.Entity("FindProperty.Models.Appointment", b =>
                 {
@@ -31,11 +52,17 @@ namespace FindProperty.Migrations.FindProperty1
                     b.Property<DateTime>("appointment_date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("hour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("property_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("user_id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -49,6 +76,9 @@ namespace FindProperty.Migrations.FindProperty1
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AgentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -58,8 +88,7 @@ namespace FindProperty.Migrations.FindProperty1
 
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("fee")
                         .HasColumnType("int");
@@ -71,11 +100,12 @@ namespace FindProperty.Migrations.FindProperty1
                     b.Property<string>("imagePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("property_type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("size")
                         .HasColumnType("int");
-
-                    b.Property<string>("status")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -88,7 +118,18 @@ namespace FindProperty.Migrations.FindProperty1
 
                     b.HasKey("id");
 
+                    b.HasIndex("AgentID");
+
                     b.ToTable("Property");
+                });
+
+            modelBuilder.Entity("FindProperty.Models.Property", b =>
+                {
+                    b.HasOne("FindProperty.Models.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
