@@ -42,6 +42,33 @@ namespace FindProperty.Migrations
                     b.ToTable("Agent");
                 });
 
+            modelBuilder.Entity("FindProperty.Models.Appointment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("appointment_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("hour")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("property_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("user_id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Appointment");
+                });
+
             modelBuilder.Entity("FindProperty.Models.Property", b =>
                 {
                     b.Property<int>("id")

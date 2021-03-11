@@ -226,5 +226,14 @@ namespace FindProperty.Views.Properties
             blobsController.deleteBlockBlob(image, property.imagePath);
             setImages(property);
         }
+
+        [Route("Property/{id}")]
+        public async Task<IActionResult> Properties_Detail(int id)
+        {
+            var property = await _context.Property.Where(p => p.id == id).FirstOrDefaultAsync();
+
+            setImages(property);
+            return View(property);
+        }
     }
 }

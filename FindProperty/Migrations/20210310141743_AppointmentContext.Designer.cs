@@ -4,14 +4,16 @@ using FindProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace FindProperty.Migrations.FindProperty1
+namespace FindProperty.Migrations
 {
     [DbContext(typeof(FindProperty1Context))]
-    partial class FindProperty1ContextModelSnapshot : ModelSnapshot
+    [Migration("20210310141743_AppointmentContext")]
+    partial class AppointmentContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,11 +54,17 @@ namespace FindProperty.Migrations.FindProperty1
                     b.Property<DateTime>("appointment_date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("hour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("property_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("user_id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 

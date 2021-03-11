@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FindProperty.Models
 {
-    public class Appointment
+    public class Booking
     {
         public int id { get; set; }
 
-        [ForeignKey("AspNetUser")]
+        
         public string user_id { get; set; }
 
         public int property_id { get; set; }
@@ -25,6 +24,5 @@ namespace FindProperty.Models
 
         public string status { get; set; } = "pending";
 
-        
     }
 }

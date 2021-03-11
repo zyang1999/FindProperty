@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FindProperty.Data;
 using FindProperty.Models;
+using Microsoft.AspNetCore.Identity;
+using FindProperty.Areas.Identity.Data;
 
 namespace FindProperty.Views.Appointments
 {
     public class AppointmentsController : Controller
     {
         private readonly FindProperty1Context _context;
-
-        public AppointmentsController(FindProperty1Context context)
+        private readonly UserManager<FindPropertyUser> _userManager;
+        public AppointmentsController(FindProperty1Context context, UserManager<FindPropertyUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Appointments
@@ -58,11 +61,21 @@ namespace FindProperty.Views.Appointments
         {
             if (ModelState.IsValid)
             {
+                if (!User.Identity.IsAuthenticated)
+                {
+
+                    return Redirect("/Identity/Account/Login");
+                }
+                appointment.user_id =  _userManager.GetUserId(HttpContext.User);
+               
+
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+                ViewBag.Message = "The booking was made successful";
             }
-            return View(appointment);
+           
+            return View("../Properties/Property_Detail");
         }
 
         // GET: Appointments/Edit/5
