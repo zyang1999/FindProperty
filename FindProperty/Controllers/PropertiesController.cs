@@ -11,6 +11,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using FindProperty.Controllers;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.AspNetCore.Cors;
 
 namespace FindProperty.Views.Properties
 {
@@ -62,7 +63,7 @@ namespace FindProperty.Views.Properties
                 setImages(property);
             }
 
-            ViewBag.PropertyType = new SelectList(await _context.Property.Select(x => x.property_type).ToListAsync());
+            ViewBag.PropertyType = await _context.Property.Select(x => x.property_type).ToListAsync();
             return View(properties);
         }
 
@@ -156,6 +157,7 @@ namespace FindProperty.Views.Properties
 
             if (ModelState.IsValid)
             {
+                
                 try
                 {
                     if (@property.imagesFiles.Any())
@@ -178,6 +180,12 @@ namespace FindProperty.Views.Properties
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            setImages(@property);
+            if (@property.imagesFiles.Count == 0){
+                ModelState.AddModelError("imagesFiles", "The Images Files field is requried.");
+            }
+            ViewData["Agents"] = _context.Agent.ToList();
             return View(@property);
         }
 

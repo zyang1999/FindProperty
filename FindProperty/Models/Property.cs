@@ -23,7 +23,7 @@ namespace FindProperty.Models
         public string description { get; set; }
 
         [Required]
-        [Display(Name = "Rental Fees (per month)")]
+        [Display(Name = "Prices or Rental Fees (per month)")]
         public int fee { get; set; }
 
         [Required]

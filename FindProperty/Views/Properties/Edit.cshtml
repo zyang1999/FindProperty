@@ -13,71 +13,79 @@
 <h4>Property</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="container">
         <form id="editForm" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <input type="hidden" asp-for="imagePath" />
-            <div class="form-group">
-                <label asp-for="title" class="control-label"></label>
-                <input asp-for="title" class="form-control" />
-                <span asp-validation-for="title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="description" class="control-label"></label>
-                <textarea asp-for="description" class="form-control"></textarea>
-                <span asp-validation-for="description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="fee" class="control-label"></label>
-                <input asp-for="fee" class="form-control" />
-                <span asp-validation-for="fee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="size" class="control-label"></label>
-                <input asp-for="size" class="form-control" />
-                <span asp-validation-for="size" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="type" class="control-label"></label>
-                <br />
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" asp-for="type" autocomplete="off" checked value="Sale"> For Sale
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" asp-for="type" autocomplete="off" value="Rent"> For Rent
-                    </label>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="title" class="control-label"></label>
+                    <input asp-for="title" class="form-control" />
+                    <span asp-validation-for="title" class="text-danger"></span>
                 </div>
-                <span asp-validation-for="type" class="text-danger"></span>
+                <div class="form-group col">
+                    <label asp-for="description" class="control-label"></label>
+                    <textarea asp-for="description" class="form-control"></textarea>
+                    <span asp-validation-for="description" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="property_type" class="control-label"></label>
-                <select asp-for="property_type" class="form-control">
-                    <option selected value="">Select a Property Type</option>
-                    <option value="Semi-Detached (Semi-D)">Semi-Detached (Semi-D)</option>
-                    <option value="Condominium ">Condominium </option>
-                    <option value="Serviced residence ">Serviced residence </option>
-                    <option value="Duplex ">Duplex </option>
-                    <option value="Studio ">Studio </option>
-                    <option value="Apartment ">Apartment </option>
-                    <option value="Bungalow ">Bungalow </option>
-                </select>
-                <span asp-validation-for="property_type" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="fee" class="control-label"></label>
+                    <input asp-for="fee" class="form-control" />
+                    <span asp-validation-for="fee" class="text-danger"></span>
+                </div>
+                <div class="form-group col">
+                    <label asp-for="size" class="control-label"></label>
+                    <input asp-for="size" class="form-control" />
+                    <span asp-validation-for="size" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="furnishing" class="control-label"></label>
-                <select asp-for="furnishing" class="form-control">
-                    <option value="">Select a Furnishing Type</option>
-                    <option value="Partially Furnised">Partially Furnished</option>
-                    <option value="Fully Furnished">Fully Furnished</option>
-                </select>
-                <span asp-validation-for="furnishing" class="text-danger"></span>
+            <div class="row">
+                <div class="mb-3 col">
+                    <label asp-for="type" class="control-label"></label>
+                    <br />
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" asp-for="type" autocomplete="off" checked value="Sale"> For Sale
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" asp-for="type" autocomplete="off" value="Rent"> For Rent
+                        </label>
+                    </div>
+                    <span asp-validation-for="type" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col">
+                    <label asp-for="property_type" class="control-label"></label>
+                    <select asp-for="property_type" class="form-control">
+                        <option selected value="">Select a Property Type</option>
+                        <option value="Semi-Detached (Semi-D)">Semi-Detached (Semi-D)</option>
+                        <option value="Condominium ">Condominium </option>
+                        <option value="Serviced residence ">Serviced residence </option>
+                        <option value="Duplex ">Duplex </option>
+                        <option value="Studio ">Studio </option>
+                        <option value="Apartment ">Apartment </option>
+                        <option value="Bungalow ">Bungalow </option>
+                    </select>
+                    <span asp-validation-for="property_type" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="address" class="control-label"></label>
-                <textarea asp-for="address" class="form-control"></textarea>
-                <span asp-validation-for="address" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col">
+                    <label asp-for="furnishing" class="control-label"></label>
+                    <select asp-for="furnishing" class="form-control">
+                        <option value="">Select a Furnishing Type</option>
+                        <option value="Partially Furnised">Partially Furnished</option>
+                        <option value="Fully Furnished">Fully Furnished</option>
+                    </select>
+                    <span asp-validation-for="furnishing" class="text-danger"></span>
+                </div>
+                <div class="form-group col">
+                    <label asp-for="address" class="control-label"></label>
+                    <textarea asp-for="address" class="form-control"></textarea>
+                    <span asp-validation-for="address" class="text-danger"></span>
+                </div>
             </div>
             <div class="mb-3">
                 <label asp-for="AgentID" class="control-label"></label>
@@ -92,30 +100,32 @@
             </div>
             <div class="mb-3">
                 <label asp-for="imagesFiles" class="control-label"></label>
-                <input asp-for="imagesFiles" class="form-control" type="file" multiple accept="image/*" onchange="uploadImage(this)" />
+                <br />
+                <label class="btn btn-primary">
+                    Upload Image
+                    <input asp-for="imagesFiles" class="form-control" type="file" multiple accept="image/*" onchange="uploadImage(this)" hidden />
+                </label>
                 <span asp-validation-for="imagesFiles" class="text-danger"></span>
             </div>
-            <div id="imagesDiv">
-                <div id="blobImages">
-                        @foreach (var item in images)
-                        {
-                            <div id="@i" class="text-center mb-2" style="width:500px; height: 300px;">
-                                <img src="@item" style="max-height: 100%; max-width: 100%" />
-                                <button type="button" class="btn btn-danger" onclick="deleteImage('@item', '@Model.id', '@i')">Delete</button>
-                            </div>
-                            i++;
-                        }
+            <div id="imagesDiv" class="container">
+                <div id="blobImages" class="row">
+                    @foreach (var item in images)
+                    {
+                        <div id="@i" class="text-center mb-2" style="width:500px; height: 300px;">
+                            <img src="@item" style="max-height: 100%; max-width: 100%" />
+                            <button type="button" class="btn btn-danger" onclick="deleteImage('@item', '@Model.id', '@i')"><i class="bi bi-trash"></i></button>
+                        </div>
+                        i++;
+                    }
                 </div>
-
             </div>
-
-            <div class="form-group">
+            <div class="form-group col">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<div id="myImg"></div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
@@ -123,6 +133,7 @@
 <script>
     var images = [];
     var index = "@i";
+
     function uploadImage(input) {
         for (var i = 0; i < input.files.length; i++) {
             let file = input.files[i];
@@ -132,9 +143,9 @@
                 var image = e.target.result;
                 var name = file.name;
                 index++;
-                $("#imagesDiv").append('<div id="' + index + '" class="text-center mb-2" style="width:500px; height: 300px;">' +
+                $("#blobImages").append('<div id="' + index + '" class="text-center mb-2" style="width:500px; height: 300px;">' +
                     '<img src="' + image + '" style="max-height: 100%; max-width: 100%" />' +
-                    '<button id ="button' + index + '"type="button" class="btn btn-danger">Delete</button>' +
+                    '<button id ="button' + index + '"type="button" class="btn btn-danger"><i class="bi bi-trash"></i></button>' +
                     '</div>');
                 $("#button" + index).attr("onClick", "removeImageFromList('" + name + "', "+ index+")");
             };

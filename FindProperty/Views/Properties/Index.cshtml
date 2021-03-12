@@ -8,72 +8,81 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+
 </p>
 <form asp-controller="Properties" asp-action="Index" method="get">
-    <p>
-
-        @Html.DropDownList("PropertyType", "All")
-
-        Search: <input type="text" class="form-control" name="searchString" placeholder="ex: Kuala Lumpur"/>
+    <div class="container d-flex align-items-center flex-row p-5">
+        <select class="custom-select-sm mr-3" aria-label="Example select with button addon">
+            <option selected value="">All</option>
+            @foreach (var item in ViewBag.PropertyType)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+        <label class="mr-1">Search:</label>
+        <input type="text" class="form-control mr-1" name="searchString" placeholder="ex: Kuala Lumpur" />
         <input type="submit" class="btn btn-primary" value="Filter" />
-    </p>
+    </div>
+    <div class="d-flex flex-row-reverse my-3">
+        <a asp-action="Create" class="btn btn-primary ">Create New</a>
+    </div>
 </form>
+
+
 @foreach (var item in Model)
 {
     var target = "#carousel" + item.id.ToString();
     var id = "carousel" + item.id.ToString();
-    <div class="card mb-3">
-        <div class="card-body d-flex flex-row">
-            <div class="container flex-grow-5">
-                <div class="mb-1">
-                    <div id="@id" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
-                        <ol class="carousel-indicators">
-                            <li type="button" data-target="@target" data-slide-to="0" class="active"></li>
-                            @for (int i = 1; i < item.images.Count; i++)
+    <div class="shadow rounded-sm mb-4">
+        <div class="card-body d-flex flex-wrap">
+            <div class="mb-1">
+                <div id="@id" class="carousel slide mb-1 container" data-bs-touch="false" data-bs-interval="false">
+                    <ol class="carousel-indicators">
+                        <li type="button" data-target="@target" data-slide-to="0" class="active"></li>
+                        @for (int i = 1; i < item.images.Count; i++)
+                        {
+                            <li type="button" data-target="@target" data-slide-to="@i"></li>
+                        }
+                    </ol>
+                    <div class="carousel-inner rounded-sm" style="background-color:lightgray">
+                        @for (int i = 0; i < item.images.Count(); i++)
+                        {
+                            if (i == 0)
                             {
-                                <li type="button" data-target="@target" data-slide-to="@i"></li>
+                                <div class="carousel-item active text-center">
+                                    <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
+                                </div>
                             }
-                        </ol>
-                        <div class="carousel-inner" style="background-color:dimgray">
-                            @for (int i = 0; i < item.images.Count(); i++)
+                            else
                             {
-                                if (i == 0)
-                                {
-                                    <div class="carousel-item active text-center" style="width:500px; height: 250px;">
-                                        <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="carousel-item text-center" style="width:500px; height: 250px;">
-                                        <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
-                                    </div>
-                                }
+                                <div class="carousel-item text-center" style="width:500px; height: 250px;">
+                                    <img src="@item.images[i]" style="max-width: 100%; max-height: 100%;">
+                                </div>
                             }
-                        </div>
-                        <a class="carousel-control-prev" href="@target" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="@target" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+                        }
                     </div>
+                    <a class="carousel-control-prev" href="@target" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="@target" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
-            </div>  
-            <div class="container flex-grow-5">
-                <h4 class="card-title my-3">@item.type</h4>
-                <h4 class="card-title my-3">RM @item.fee</h4>
-                <div class="my-3">
-                    <h4 mb-1 text-muted">@item.title</h4>
-                    <h5>@item.address</h5>
+
+                <div class="container">
+                    <h4 class="card-title my-3">@item.type</h4>
+                    <h4 class="card-title my-3">RM @item.fee</h4>
+                    <div class="my-3">
+                        <h4 mb-1 text-muted">@item.title</h4>
+                        <h5>@item.address</h5>
+                    </div>
+                    <p class="card-subtitle my-3">@item.property_type | Built-up : @item.size sq. ft. | @item.furnishing</p>
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
                 </div>
-                <p class="card-subtitle my-3">@item.type | Built-up : @item.size sq. ft. | @item.furnishing</p>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </div>
         </div>
     </div>
