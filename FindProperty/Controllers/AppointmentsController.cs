@@ -66,15 +66,27 @@ namespace FindProperty.Views.Appointments
 
                     return Redirect("/Identity/Account/Login");
                 }
-                appointment.user_id =  _userManager.GetUserId(HttpContext.User);
-               
+                //check property got appointment
+                //check user book appointment on that day or not
 
+                appointment.user_id = _userManager.GetUserId(HttpContext.User);
+                var property = await _context.Appointment.Where(p => p.property_id == appointment.property_id)
+                                                         .Where(w => w.appointment_date == appointment.appointment_date)
+                                                         .Where(x => x.hour == appointment.hour)
+                                                         .Where(z => z.user_id == appointment.user_id)
+                                                         .FirstOrDefaultAsync();
+                                                         
+                if (property != null)
+                {
+                    ViewBag.error2 = "The property was rent at the time";
+                    return View("../Properties/Property_Detail");
+                }
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
                 ViewBag.Message = "The booking was made successful";
             }
-           
+
             return View("../Properties/Property_Detail");
         }
 

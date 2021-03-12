@@ -25,9 +25,12 @@
                 <a id="manage" class="nav-link text-dark" asp-controller="Agents" asp-action="Index">Agents</a>
             </li>
         }
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="Properties">Properties</a>
-        </li>
+        else if(UserManager.GetUserAsync(User).Result.role == "customer") { 
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="Search">Properties</a>
+            </li>
+        }
+        
 
 
     }

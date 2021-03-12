@@ -48,6 +48,11 @@ namespace FindProperty.Views.Properties
                 properties = properties.Where(s => s.title.Contains(searchString)).ToList();
             }
 
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                properties = await _context.Property.Where(s => s.address.Contains(searchString)).ToListAsync();
+            }
+
             if (!string.IsNullOrEmpty(propertyType))
             {
                 properties = properties.Where(x => x.property_type == propertyType).ToList();
@@ -260,10 +265,56 @@ namespace FindProperty.Views.Properties
         [Route("Property/{id}")]
         public async Task<IActionResult> Properties_Detail(int id)
         {
-            var property = await _context.Property.Where(p => p.id == id).FirstOrDefaultAsync();
 
-            setImages(property);
-            return View(property);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @property = await _context.Property.Include(x => x.Agent)
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (@property == null)
+            {
+                return NotFound();
+            }
+
+            setImages(@property);
+
+            @property.Agent.profile_picture = blobsController.getBlockBlobs(@property.Agent.profile_picture).First().Uri.ToString();
+
+            return View(@property);
         }
+
+        public async Task<IActionResult> Search(string propertyType, string searchString)
+        {
+            var properties = await _context.Property.ToListAsync();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                properties = await _context.Property.Where(s => s.title.Contains(searchString)).ToListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                properties = await _context.Property.Where(s => s.address.Contains(searchString)).ToListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(propertyType))
+            {
+                properties = await _context.Property.Where(x => x.property_type == propertyType).ToListAsync();
+            }
+
+            foreach (var property in properties)
+            {
+                setImages(property);
+            }
+
+            ViewBag.PropertyType = new SelectList(await _context.Property.Select(x => x.property_type).ToListAsync());
+            return View("Properties",properties);
+        }
+
+   
+        
     }
+
 }

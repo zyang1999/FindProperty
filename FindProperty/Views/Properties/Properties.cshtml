@@ -3,6 +3,17 @@
 @{
     ViewData["Title"] = "Properties";
 }
+<div class="mx-3 mt-3">
+<form asp-controller="Properties" asp-action="Search" method="get">
+    <p>
+
+        @Html.DropDownList("PropertyType", "All")
+
+        Search: <input type="text" class="form-control" name="searchString" placeholder="ex: Kuala Lumpur" />
+        <input type="submit" class="btn btn-primary" value="Filter" />
+    </p>
+</form>
+</div>
 @foreach (var item in Model)
 {
     var target = "#carousel" + item.id.ToString();
