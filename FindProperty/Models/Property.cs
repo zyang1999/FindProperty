@@ -59,8 +59,8 @@ namespace FindProperty.Models
         public List<string> images { get; set; } = new List<string>();
         public virtual Agent Agent { get; set; }
 
-        [NotMapped]
         [Required]
+        [NotMapped]       
         [Display(Name = "Images of the property")]
         public List<IFormFile> imagesFiles { get; set; }
 

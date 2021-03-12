@@ -26,7 +26,7 @@ namespace FindProperty.Views.Properties
             blobsController = new BlobsController();
         }
 
-     
+
         public async Task<IActionResult> Properties()
         {
 
@@ -39,18 +39,47 @@ namespace FindProperty.Views.Properties
         }
 
         // GET: Properties
-        public async Task<IActionResult> Index(string propertyType, string searchString)
+        public async Task<IActionResult> Index(string propertyType, string searchString, string sort, string type)
         {
             var properties = await _context.Property.ToListAsync();
-            
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                properties = await _context.Property.Where(s => s.title.Contains(searchString)).ToListAsync();
+                properties = properties.Where(s => s.title.Contains(searchString)).ToList();
             }
 
             if (!string.IsNullOrEmpty(propertyType))
             {
-                properties = await _context.Property.Where(x => x.property_type == propertyType).ToListAsync();
+                properties = properties.Where(x => x.property_type == propertyType).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                properties = properties.Where(x => x.type == type).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "newest":
+                        properties = properties.OrderBy(property => property.created_at).ToList();
+                        break;
+                    case "highest price":
+                        properties = properties.OrderByDescending(property => property.fee).ToList();
+                        break;
+                    case "lowest price":
+                        properties = properties.OrderBy(property => property.fee).ToList();
+                        break;
+                    case "highest size":
+                        properties = properties.OrderByDescending(property => property.size).ToList();
+                        break;
+                    case "lowest size":
+                        properties = properties.OrderBy(property => property.size).ToList();
+                        break;
+                    default:
+                        break;
+                }
             }
 
             foreach (var property in properties)
@@ -58,7 +87,10 @@ namespace FindProperty.Views.Properties
                 setImages(property);
             }
 
-            ViewBag.PropertyType = await _context.Property.Select(x => x.property_type).ToListAsync();
+            ViewBag.PropertyType = await _context.Property.Select(x => x.property_type).Distinct().ToListAsync();
+            ViewData["searchString"] = searchString;
+            ViewData["property_type"] = propertyType;
+            ViewData["type"] = type;
             return View(properties);
         }
 
@@ -117,8 +149,11 @@ namespace FindProperty.Views.Properties
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["Agents"] = _context.Agent.ToList();
             return View(@property);
         }
+
 
         // GET: Properties/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -149,13 +184,12 @@ namespace FindProperty.Views.Properties
             {
                 return NotFound();
             }
-
+            ModelState.Remove("imagesFiles");
             if (ModelState.IsValid)
             {
-                
                 try
                 {
-                    if (@property.imagesFiles.Any())
+                    if (@property.imagesFiles != null)
                     {
                         @property.imagePath = blobsController.editBlob(@property.imagePath, @property.imagesFiles);
                     }
@@ -175,11 +209,6 @@ namespace FindProperty.Views.Properties
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            setImages(@property);
-            if (@property.imagesFiles.Count == 0){
-                ModelState.AddModelError("imagesFiles", "The Images Files field is requried.");
-            }
             ViewData["Agents"] = _context.Agent.ToList();
             return View(@property);
         }
@@ -198,7 +227,8 @@ namespace FindProperty.Views.Properties
             {
                 return NotFound();
             }
-
+            setImages(@property);
+            @property.Agent.profile_picture = blobsController.getBlockBlobs(@property.Agent.profile_picture).First().Uri.ToString();
             return View(@property);
         }
 

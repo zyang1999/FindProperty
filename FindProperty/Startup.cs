@@ -19,6 +19,7 @@ namespace FindProperty
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,6 +30,17 @@ namespace FindProperty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                         builder =>
+                         {
+                             builder.WithOrigins("https://findpropertystorage.blob.core.windows.net")
+                                   .AllowCredentials();
+                         }
+                );
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAzureClients(builder =>
@@ -39,6 +51,7 @@ namespace FindProperty
 
             services.AddDbContext<FindProperty1Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FindProperty1Context")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +71,7 @@ namespace FindProperty
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -69,6 +83,7 @@ namespace FindProperty
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
 
         }
     }
