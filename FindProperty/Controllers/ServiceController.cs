@@ -13,83 +13,71 @@ namespace FindProperty.Controllers
 {
     public class ServiceController : Controller
     {
-      
-        const string ServiceBusConnectionString = "Endpoint=sb://servicebustp000000.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
-        const string QueueName = "AppointmentQueue";
+
+        const string ServiceBusConnectionString = "Endpoint=sb://servicebustp046685.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
+        const string QueueName = "appointmentqueue";
         static IQueueClient queueClient;
-        static List<string> items;
+        static List<string> appointments;
 
         //Part 1: Send Message to the Service Bus
-        public void Index()
+        public async Task SendMessagesAsync(int numberOfMessagesToSend)
         {
             queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
             try
             {
-                for (var i = 0; i < 10; i++)
+                for (var i = 0; i < numberOfMessagesToSend; i++)
                 {
-                    // Create a new message to send to the queue.
+                    // Create a new message to send to the queue
                     string messageBody = $"Message {i}";
                     var message = new Message(Encoding.UTF8.GetBytes(messageBody));
 
-                    // Write the body of the message to the console.
+                    // Write the body of the message to the console
                     Console.WriteLine($"Sending message: {messageBody}");
 
-                    // Send the message to the queue.
-                     queueClient.SendAsync(message);
-                    ViewBag.msg = "success";
+                    // Send the message to the queue
+                    await queueClient.SendAsync(message);
                 }
             }
             catch (Exception exception)
             {
-                ViewBag.msg = exception.ToString();
+                Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
-            
         }
 
-        //Part 2: Received Message from the Service Bus - cal get data function
-        public async Task<IActionResult> ProcessMsg()
+        public List<string> RegisterOnMessageHandlerAndReceiveMessages()
         {
-            //queueClient = new QueueClient(ServiceBusConnectionString, QueueName, ReceiveMode.PeekLock);
-            items = new List<string>();
-            await Task.Factory.StartNew(() =>
-            {
-                queueClient = new QueueClient(ServiceBusConnectionString, QueueName, ReceiveMode.PeekLock);
-                var options = new MessageHandlerOptions(ExceptionMethod)
-                {
-                    MaxConcurrentCalls = 1,
-                    AutoComplete = false
-                };
-                queueClient.RegisterMessageHandler(ExecuteMessageProcessing, options);
-            });
+            appointments = new List<string>();
 
-            return RedirectToAction("ProcessMsgResult");
+            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            {
+                MaxConcurrentCalls = 1,
+                AutoComplete = false
+            };
+            queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            return appointments;
         }
 
-        //Part 2: Received Message from the Service Bus - get data step
-        private static async Task ExecuteMessageProcessing(Message message, CancellationToken arg2)
+        public async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
             //var result = JsonConvert.DeserializeObject<Ostring>(Encoding.UTF8.GetString(message.Body));
-            // Console.WriteLine($"Order Id is {result.OrderId}, Order name is {result.OrderName} and quantity is {result.OrderQuantity}");
-            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
+            // Console.WriteLine($"Appointment ID: is {result.OrderId}, Order name is {result.OrderName} and quantity is {result.OrderQuantity}");
+            //Console.WriteLine($"Date: {result.date}");
+            //Console.WriteLine($"Time: {result.hour}");
+            //Console.WriteLine($"User Name: {result.user.name}");
+            appointments.Add(Encoding.UTF8.GetString(message.Body));
             await queueClient.CompleteAsync(message.SystemProperties.LockToken);
-
-            items.Add("Received message: SequenceNumber:" + message.SystemProperties.SequenceNumber + " Body:" + Encoding.UTF8.GetString(message.Body));
-
         }
 
-        //Part 2: Received Message from the Service Bus
-        private static async Task ExceptionMethod(ExceptionReceivedEventArgs arg)
+        public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
-            await Task.Run(() =>
-           Console.WriteLine($"Error occured. Error is {arg.Exception.Message}")
-           );
-        }
-
-        //Part 2: Received Message from the Service Bus - Display step
-        //however, there is a bug where you have to reload the page for second time only can see the result.
-        public IActionResult ProcessMsgResult()
-        {
-            return View(items);
+            Console.WriteLine($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
+            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            Console.WriteLine("Exception context for troubleshooting:");
+            Console.WriteLine($"- Endpoint: {context.Endpoint}");
+            Console.WriteLine($"- Entity Path: {context.EntityPath}");
+            Console.WriteLine($"- Executing Action: {context.Action}");
+            return Task.CompletedTask;
         }
     }
 }

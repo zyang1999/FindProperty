@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FindProperty.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +37,7 @@ namespace FindProperty.Models
         public string type { get; set; }
 
         [Required]
-        [Display(Name ="Property Type")]
+        [Display(Name = "Property Type")]
         public string property_type { get; set; }
 
         [Required]
@@ -51,7 +53,7 @@ namespace FindProperty.Models
         [Required]
         [ForeignKey("Agent")]
         [Display(Name = "Agent")]
-        public int AgentID{ get; set; }
+        public int AgentID { get; set; }
 
         public DateTime created_at { get; set; } = DateTime.Now;
 
@@ -60,12 +62,13 @@ namespace FindProperty.Models
         public virtual Agent Agent { get; set; }
 
         [Required]
-        [NotMapped]       
+        [NotMapped]
         [Display(Name = "Images of the property")]
         public List<IFormFile> imagesFiles { get; set; }
 
         [NotMapped]
         public SelectList propertiesList { get; set; }
+
     }
 
 }

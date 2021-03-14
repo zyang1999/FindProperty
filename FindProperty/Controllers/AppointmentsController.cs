@@ -9,6 +9,7 @@ using FindProperty.Data;
 using FindProperty.Models;
 using Microsoft.AspNetCore.Identity;
 using FindProperty.Areas.Identity.Data;
+using FindProperty.Controllers;
 
 namespace FindProperty.Views.Appointments
 {
@@ -25,6 +26,8 @@ namespace FindProperty.Views.Appointments
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
+            ServiceController serviceController = new ServiceController();
+            List<string> appointments = serviceController.RegisterOnMessageHandlerAndReceiveMessages();
             return View(await _context.Appointment.ToListAsync());
         }
 
