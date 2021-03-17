@@ -10,30 +10,24 @@ using System.Text;
 using System.Threading;
 using FindProperty.Models;
 using Microsoft.Azure.ServiceBus.Management;
-using FindProperty.Areas.Identity.Data;
-using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 
 namespace FindProperty.Controllers
 {
     public class ServiceController : Controller
     {
-      
+
         const string ServiceBusConnectionString = "Endpoint=sb://servicebustp046685.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
-                                                   
         const string QueueName = "appointmentqueue";
-        public const string Namespace = "servicebustp046685";
         static IQueueClient queueClient;
-        static List<string> items;
-        private UserManager<FindPropertyUser> userManager;
+        public static List<string> appointments = new List<string>();
+
         //Part 1: Send Message to the Service Bus
         public void Index(string Message)
         {
-            
             queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
             try
             {
-                CreateQueueFunctionAsync();     
+                CreateQueueFunctionAsync();
                 string messageBody = Message;
                 var message = new Message(Encoding.UTF8.GetBytes(messageBody));
 
@@ -43,13 +37,11 @@ namespace FindProperty.Controllers
                 // Send the message to the queue.
                 queueClient.SendAsync(message);
                 ViewBag.msg = "success";
-                
             }
             catch (Exception exception)
             {
-                ViewBag.msg = exception.ToString();
+                Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
-            
         }
 
         private static async Task CreateQueueFunctionAsync()
@@ -65,51 +57,39 @@ namespace FindProperty.Controllers
             }
         }
 
-
-        //Part 2: Received Message from the Service Bus - cal get data function
-        public async Task<IActionResult> ProcessMsg()
+        public void RegisterOnMessageHandlerAndReceiveMessages()
         {
-            //queueClient = new QueueClient(ServiceBusConnectionString, QueueName, ReceiveMode.PeekLock);
-            items = new List<string>();
-            await Task.Factory.StartNew(() =>
-            {
-                queueClient = new QueueClient(ServiceBusConnectionString, QueueName, ReceiveMode.PeekLock);
-                var options = new MessageHandlerOptions(ExceptionMethod)
-                {
-                    MaxConcurrentCalls = 1,
-                    AutoComplete = false
-                };
-                queueClient.RegisterMessageHandler(ExecuteMessageProcessing, options);
-            });
 
-            return RedirectToAction("ProcessMsgResult");
+            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            {
+                MaxConcurrentCalls = 1,
+                AutoComplete = false
+            };
+            queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
         }
 
-        //Part 2: Received Message from the Service Bus - get data step
-        private static async Task ExecuteMessageProcessing(Message message, CancellationToken arg2)
+        public async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
             //var result = JsonConvert.DeserializeObject<Ostring>(Encoding.UTF8.GetString(message.Body));
-            // Console.WriteLine($"Order Id is {result.OrderId}, Order name is {result.OrderName} and quantity is {result.OrderQuantity}");
-            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
+            // Console.WriteLine($"Appointment ID: is {result.OrderId}, Order name is {result.OrderName} and quantity is {result.OrderQuantity}");
+            //Console.WriteLine($"Date: {result.date}");
+            //Console.WriteLine($"Time: {result.hour}");
+            //Console.WriteLine($"User Name: {result.user.name}");
+            Console.WriteLine($"{Encoding.UTF8.GetString(message.Body)}");
             await queueClient.CompleteAsync(message.SystemProperties.LockToken);
-
-            items.Add("Received message: SequenceNumber:" + message.SystemProperties.SequenceNumber + " Body:" + Encoding.UTF8.GetString(message.Body));
-
+            appointments.Add(Encoding.UTF8.GetString(message.Body));
         }
 
-        //Part 2: Received Message from the Service Bus
-        private static async Task ExceptionMethod(ExceptionReceivedEventArgs arg)
+        public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
-            await Task.Run(() =>
-           Console.WriteLine($"Error occured. Error is {arg.Exception.Message}")
-           );
-        }
-
-        //Part 2: Received Message from the Service Bus - Display step
-        //however, there is a bug where you have to reload the page for second time only can see the result.
-        public IActionResult ProcessMsgResult()
-        {
-            return View(items);
+            Console.WriteLine($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
+            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            Console.WriteLine("Exception context for troubleshooting:");
+            Console.WriteLine($"- Endpoint: {context.Endpoint}");
+            Console.WriteLine($"- Entity Path: {context.EntityPath}");
+            Console.WriteLine($"- Executing Action: {context.Action}");
+            return Task.CompletedTask;
         }
     }
 }
