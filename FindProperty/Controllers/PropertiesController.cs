@@ -263,14 +263,14 @@ namespace FindProperty.Views.Properties
         }
 
         [Route("Property/{id}")]
-        public async Task<IActionResult> Properties_Detail(int id)
+        public async Task<IActionResult> Properties_Detail(int id,string Message)
         {
 
             if (id == null)
             {
                 return NotFound();
             }
-
+            ViewBag.Message = Message;
             var @property = await _context.Property.Include(x => x.Agent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (@property == null)
