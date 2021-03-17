@@ -8,6 +8,7 @@ using Microsoft.ServiceBus.Management;
 using Microsoft.Azure.ServiceBus;
 using System.Text;
 using System.Threading;
+using FindProperty.Models;
 
 namespace FindProperty.Controllers
 {
@@ -17,7 +18,7 @@ namespace FindProperty.Controllers
         const string ServiceBusConnectionString = "Endpoint=sb://servicebustp046685.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
         const string QueueName = "appointmentqueue";
         static IQueueClient queueClient;
-        static List<string> appointments;
+        public static List<string> appointments = new List<string>();
 
         //Part 1: Send Message to the Service Bus
         public async Task SendMessagesAsync(int numberOfMessagesToSend)
@@ -44,10 +45,9 @@ namespace FindProperty.Controllers
             }
         }
 
-        public List<string> RegisterOnMessageHandlerAndReceiveMessages()
+        public void RegisterOnMessageHandlerAndReceiveMessages()
         {
-            appointments = new List<string>();
-
+            
             queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {
@@ -55,7 +55,6 @@ namespace FindProperty.Controllers
                 AutoComplete = false
             };
             queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
-            return appointments;
         }
 
         public async Task ProcessMessagesAsync(Message message, CancellationToken token)
@@ -65,8 +64,9 @@ namespace FindProperty.Controllers
             //Console.WriteLine($"Date: {result.date}");
             //Console.WriteLine($"Time: {result.hour}");
             //Console.WriteLine($"User Name: {result.user.name}");
-            appointments.Add(Encoding.UTF8.GetString(message.Body));
+            Console.WriteLine($"{Encoding.UTF8.GetString(message.Body)}");
             await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+            appointments.Add(Encoding.UTF8.GetString(message.Body));
         }
 
         public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

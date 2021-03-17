@@ -17,6 +17,7 @@ namespace FindProperty.Views.Appointments
     {
         private readonly FindProperty1Context _context;
         private readonly UserManager<FindPropertyUser> _userManager;
+        public List<string> appointments;
         public AppointmentsController(FindProperty1Context context, UserManager<FindPropertyUser> userManager)
         {
             _context = context;
@@ -26,8 +27,7 @@ namespace FindProperty.Views.Appointments
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
-            ServiceController serviceController = new ServiceController();
-            List<string> appointments = serviceController.RegisterOnMessageHandlerAndReceiveMessages();
+            ViewBag.appointmentMessage = ServiceController.appointments;
             return View(await _context.Appointment.ToListAsync());
         }
 

@@ -29,7 +29,6 @@ namespace FindProperty.Views.Properties
 
         public async Task<IActionResult> Properties()
         {
-
             var properties = await _context.Property.ToListAsync();
             foreach (var property in properties)
             {
@@ -41,6 +40,8 @@ namespace FindProperty.Views.Properties
         // GET: Properties
         public async Task<IActionResult> Index(string propertyType, string searchString, string sort, string type)
         {
+            ServiceController serviceController = new ServiceController();
+            await serviceController.SendMessagesAsync(10);
             var properties = await _context.Property.ToListAsync();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -109,7 +110,6 @@ namespace FindProperty.Views.Properties
                 property.images.Add(((CloudBlockBlob)item).Uri.ToString());
             }
         }
-
 
         // GET: Properties/Details/5
         public async Task<IActionResult> Details(int? id)
