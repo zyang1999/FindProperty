@@ -19,14 +19,20 @@ namespace FindProperty.Models
 
         [Required]
         [DisplayName("Phone Number")]
-        [RegularExpression("^(\\+?6?01)[0-46-9]-*[0-9]{7,8}$", ErrorMessage ="Please provide a provide phone number.")]
+        [RegularExpression("^(\\+?6?01)[0-46-9]-*[0-9]{7,8}$", ErrorMessage ="Please provide a valid phone number.")]
         public string phone_number { get; set; }
 
         public string profile_picture { get; set; }
 
         [NotMapped]
-        [Required]
+        [Required]      
         [DisplayName("Profile Picture")]
         public IFormFile profilePicture { get; set; } 
+
+        [NotMapped]
+        public string profilePreview { get; set; }
+
+        public virtual List<Property> Properties { get; set; }
+
     }
 }

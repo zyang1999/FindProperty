@@ -14,12 +14,12 @@ using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using FindProperty.Data;
+using FindProperty.Controllers;
 
 namespace FindProperty
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,17 +30,8 @@ namespace FindProperty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                         builder =>
-                         {
-                             builder.WithOrigins("https://findpropertystorage.blob.core.windows.net")
-                                   .AllowCredentials();
-                         }
-                );
-            });
-
+            ServiceController serviceController = new ServiceController();
+            serviceController.RegisterOnMessageHandlerAndReceiveMessages();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAzureClients(builder =>

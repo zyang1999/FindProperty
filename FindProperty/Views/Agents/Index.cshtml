@@ -4,47 +4,37 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="text-center mt-1">
+    <img src="https://www.realestatewitch.com/wp-content/uploads/2020/07/shutterstock_1660158388.jpg" style="width: 500px" class="rounded"/>
+    <h1>Agents</h1>
+</div>
+<form asp-action="Index" class="d-flex justify-content-center align-content-center px-5">
+    <label class="mr-2">Search:</label>
+    <input type="text" class="form-control mr-2" name="searchString">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<small id="emailHelp" class="form-text text-muted text-center">Please search the agents with their name or contact number.</small>
+<div class="d-flex flex-row-reverse mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</div>
 
-<h1>Index</h1>
+<div class="d-flex flex-wrap align-content-around mb-5">
+    @foreach (var item in Model)
+    {
+    <div class="shadow rounded mr-5 p-4 text-center">
+        <div style="width: 200px; height: 200px; background-color:lightgray; display: flex; justify-content: center; align-items: center;text-align: center" class="text-center rounded mb-2 mx-auto d-block">
+            <img src="@item.profile_picture" style="max-height:100%; max-width: 100%" />
+        </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.profile_picture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.phone_number)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <div class="text-center" style="width:200px; height: 200px">
-                    <img src="@item.profile_picture" style="max-height:100%; max-width: 100%" />
-                </div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.phone_number)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AgentID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AgentID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AgentID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <h4>@Html.DisplayFor(modelItem => item.name)</h4>
+        <h6 class="mb-3">@Html.DisplayFor(modelItem => item.phone_number)</h6>
+
+        <a asp-action="Edit" asp-route-id="@item.AgentID" class="btn btn-primary mr-2"><i class="bi bi-pencil-square"></i> Edit</a>
+        <a asp-action="Details" asp-route-id="@item.AgentID" class="btn btn-secondary mr-2"><i class="bi bi-info-square"></i> Details</a>
+        <a asp-action="Delete" asp-route-id="@item.AgentID" class="btn btn-danger mr-2"><i class="bi bi-trash"></i> Delete</a>
+
+    </div>
+    }
+</div>
+
+
