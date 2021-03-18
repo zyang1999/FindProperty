@@ -11,9 +11,10 @@ namespace FindProperty.Models
     {
         public int id { get; set; }
 
-        [ForeignKey("AspNetUser")]
+        [ForeignKey("FindPropertyUser")]
         public string user_id { get; set; }
 
+        [ForeignKey("property_id")]
         public int property_id { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
@@ -22,9 +23,19 @@ namespace FindProperty.Models
 
         public string hour { get; set; }
 
-
         public string status { get; set; } = "pending";
 
-        
+        [NotMapped]
+        public string customerName { get; set; }
+
+        [NotMapped]
+        public string propertyTitle { get; set; }
+
+        [ForeignKey("property_id")]
+        public virtual Property property { get; set; }
+
+        [NotMapped]
+        public virtual FindProperty.Areas.Identity.Data.FindPropertyUser customer { get; set; }
+
     }
 }

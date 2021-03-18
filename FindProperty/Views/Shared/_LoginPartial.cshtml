@@ -24,6 +24,9 @@
             <li class="nav-item">
                 <a id="manage" class="nav-link text-dark" asp-controller="Agents" asp-action="Index">Agents</a>
             </li>
+            <li class="nav-item">
+                <a id="manage" class="nav-link text-dark" asp-controller="Appointments" asp-action="Index">Appointments</a>
+            </li>
         }
         else if (UserManager.GetUserAsync(User).Result.role == "customer")
         {
@@ -34,9 +37,6 @@
                 <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="View_Appointment">Appointment</a>
             </li>
         }
-
-
-
     }
     else
     {

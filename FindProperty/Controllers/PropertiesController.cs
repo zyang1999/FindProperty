@@ -41,7 +41,7 @@ namespace FindProperty.Views.Properties
         public async Task<IActionResult> Index(string propertyType, string searchString, string sort, string type)
         {
             ServiceController serviceController = new ServiceController();
-            await serviceController.SendMessagesAsync(10);
+            serviceController.Index("asd");
             var properties = await _context.Property.ToListAsync();
 
             if (!string.IsNullOrEmpty(searchString))

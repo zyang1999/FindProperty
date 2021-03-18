@@ -23,8 +23,7 @@ namespace FindProperty.Controllers
 
         //Part 1: Send Message to the Service Bus
         public void Index(string Message)
-        {
-            
+        {      
             try
             {
                 CreateQueueFunctionAsync();
@@ -57,7 +56,7 @@ namespace FindProperty.Controllers
             }
         }
 
-        public void RegisterOnMessageHandlerAndReceiveMessages()
+        public ActionResult RegisterOnMessageHandlerAndReceiveMessages(string searchString, string status, DateTime date)
         {
 
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
@@ -66,6 +65,9 @@ namespace FindProperty.Controllers
                 AutoComplete = false
             };
             queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            System.Threading.Thread.Sleep(3000);
+            queueClient.CloseAsync().Wait();
+            return RedirectToAction("Index", "Appointments", new { searchString, status, date});
         }
 
         public async Task ProcessMessagesAsync(Message message, CancellationToken token)

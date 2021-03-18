@@ -15,6 +15,16 @@
   <ItemGroup>
     <Compile Remove="Migrations\20210314050427_appointment.cs" />
     <Compile Remove="Migrations\20210314050427_appointment.Designer.cs" />
+    <Compile Remove="Migrations\20210318090829_appointment_edit.cs" />
+    <Compile Remove="Migrations\20210318090829_appointment_edit.Designer.cs" />
+    <Compile Remove="Migrations\20210318091201_appointment_edit.cs" />
+    <Compile Remove="Migrations\20210318091201_appointment_edit.Designer.cs" />
+    <Compile Remove="Migrations\20210318095236_appointment_edit.cs" />
+    <Compile Remove="Migrations\20210318095236_appointment_edit.Designer.cs" />
+    <Compile Remove="Migrations\20210318104915_appointment_edit.cs" />
+    <Compile Remove="Migrations\20210318104915_appointment_edit.Designer.cs" />
+    <Compile Remove="Migrations\20210318105141_appointment_edit.cs" />
+    <Compile Remove="Migrations\20210318105141_appointment_edit.Designer.cs" />
     <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.cs" />
     <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.Designer.cs" />
     <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.cs" />
