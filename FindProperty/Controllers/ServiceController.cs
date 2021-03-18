@@ -17,13 +17,13 @@ namespace FindProperty.Controllers
 
         const string ServiceBusConnectionString = "Endpoint=sb://servicebustp046685.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
         const string QueueName = "appointmentqueue";
-        static IQueueClient queueClient;
         public static List<string> appointments = new List<string>();
+        public IQueueClient queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
 
         //Part 1: Send Message to the Service Bus
         public async Task SendMessagesAsync(int numberOfMessagesToSend)
         {
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+            
             try
             {
                 for (var i = 0; i < numberOfMessagesToSend; i++)
@@ -43,12 +43,11 @@ namespace FindProperty.Controllers
             {
                 Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
+            await queueClient.CloseAsync();
         }
 
         public void RegisterOnMessageHandlerAndReceiveMessages()
         {
-            
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {
                 MaxConcurrentCalls = 1,

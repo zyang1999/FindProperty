@@ -27,7 +27,8 @@ namespace FindProperty.Views.Appointments
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
-            ViewBag.appointmentMessage = ServiceController.appointments;
+            ViewBag.appointmentMessage = ServiceController.appointments.ToList();
+            ServiceController.appointments.Clear();
             return View(await _context.Appointment.ToListAsync());
         }
 
