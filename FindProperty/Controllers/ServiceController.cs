@@ -9,6 +9,7 @@ using Microsoft.Azure.ServiceBus;
 using System.Text;
 using System.Threading;
 using FindProperty.Models;
+using Microsoft.Azure.ServiceBus.Management;
 
 namespace FindProperty.Controllers
 {
@@ -21,33 +22,44 @@ namespace FindProperty.Controllers
         public IQueueClient queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
 
         //Part 1: Send Message to the Service Bus
-        public async Task SendMessagesAsync(int numberOfMessagesToSend)
+        public void Index(string Message)
         {
             
             try
             {
-                for (var i = 0; i < numberOfMessagesToSend; i++)
-                {
-                    // Create a new message to send to the queue
-                    string messageBody = $"Message {i}";
-                    var message = new Message(Encoding.UTF8.GetBytes(messageBody));
+                CreateQueueFunctionAsync();
+                string messageBody = Message;
+                var message = new Message(Encoding.UTF8.GetBytes(messageBody));
 
-                    // Write the body of the message to the console
-                    Console.WriteLine($"Sending message: {messageBody}");
+                // Write the body of the message to the console.
+                Console.WriteLine($"Sending message: {messageBody}");
 
-                    // Send the message to the queue
-                    await queueClient.SendAsync(message);
-                }
+                // Send the message to the queue.
+                queueClient.SendAsync(message);
+                ViewBag.msg = "success";
             }
             catch (Exception exception)
             {
                 Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
-            await queueClient.CloseAsync();
+        }
+
+        private static async Task CreateQueueFunctionAsync()
+        {
+            var managementClient = new ManagementClient(ServiceBusConnectionString);
+            bool queueExists = await managementClient.QueueExistsAsync(QueueName);
+            if (!queueExists)
+            {
+                QueueDescription qd = new QueueDescription(QueueName);
+                qd.MaxSizeInMB = 1024;
+                qd.MaxDeliveryCount = 10;
+                await managementClient.CreateQueueAsync(qd);
+            }
         }
 
         public void RegisterOnMessageHandlerAndReceiveMessages()
         {
+
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {
                 MaxConcurrentCalls = 1,
