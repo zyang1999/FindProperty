@@ -17,7 +17,6 @@ namespace FindProperty.Views.Appointments
     {
         private readonly FindProperty1Context _context;
         private readonly UserManager<FindPropertyUser> _userManager;
-        public List<string> appointments;
         public AppointmentsController(FindProperty1Context context, UserManager<FindPropertyUser> userManager)
         {
             _context = context;
@@ -25,10 +24,36 @@ namespace FindProperty.Views.Appointments
         }
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string status, DateTime date)
         {
-            ViewBag.appointmentMessage = ServiceController.appointments;
-            return View(await _context.Appointment.ToListAsync());
+            ViewBag.appointmentMessage = ServiceController.appointments.ToList();
+            ServiceController.appointments.Clear();
+            var appointments = await _context.Appointment.ToListAsync();
+            appointments.ForEach(x =>
+            {
+                x.customerName = _userManager.FindByIdAsync(x.user_id).Result.name;
+                x.propertyTitle = _context.Property.Find(x.property_id).title;
+            });
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                appointments = appointments.Where(x => x.propertyTitle.Contains(searchString.ToLower())|| x.customerName.ToLower().Contains(searchString.ToLower())).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                appointments = appointments.Where(x => x.status == status).ToList();
+            }
+
+            if (date != DateTime.MinValue)
+            {
+                appointments = appointments.Where(x => x.appointment_date == date).ToList();
+            }
+
+            ViewData["searchString"] = searchString;
+            ViewData["status"] = status;
+            ViewData["date"] = date.ToString("yyyy-MM-dd");
+            return View(appointments);
         }
 
         // GET: Appointments/Details/5
@@ -39,13 +64,17 @@ namespace FindProperty.Views.Appointments
                 return NotFound();
             }
 
-            var appointment = await _context.Appointment
+            var appointment = await _context.Appointment.Include(x => x.property).ThenInclude(x => x.Agent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (appointment == null)
             {
                 return NotFound();
             }
 
+            appointment.customer = _userManager.FindByIdAsync(appointment.user_id).Result;
+            BlobsController blobsController = new BlobsController();
+            blobsController.getBlockBlobs(appointment.property.imagePath).ToList().ForEach(x => appointment.property.images.Add(x.Uri.ToString()));
+            appointment.property.Agent.profile_picture = blobsController.getBlockBlobs(appointment.property.Agent.profile_picture).ToList().First().Uri.ToString();
             return View(appointment);
         }
 
@@ -62,7 +91,7 @@ namespace FindProperty.Views.Appointments
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,user_id,property_id,appointment_date,hour,status")] Appointment appointment, string error2)
         {
-            
+
             {
 
                 if (!User.Identity.IsAuthenticated)
@@ -82,88 +111,54 @@ namespace FindProperty.Views.Appointments
 
 
                 appointment.user_id = _userManager.GetUserId(HttpContext.User);
-                
+
                 var property = await _context.Appointment.Where(p => p.property_id == appointment.property_id)
-                                                         .Where(w => w.appointment_date == appointment.appointment_date)                                                       
+                                                         .Where(w => w.appointment_date == appointment.appointment_date)
                                                          .ToListAsync();
 
                 var appointment_exist = property.Where(z => z.user_id == appointment.user_id).FirstOrDefault();
-                var other_exist = property.Where(h=>h.hour == appointment.hour).FirstOrDefault();
+                var other_exist = property.Where(h => h.hour == appointment.hour).FirstOrDefault();
 
                 if (appointment_exist != null)
                 {
-                   
-                    return RedirectToAction("Properties_Detail", "Properties", new { id = appointment.property_id ,Message = "Appointment was found at the same date" });
+
+                    return RedirectToAction("Properties_Detail", "Properties", new { id = appointment.property_id, Message = "Appointment was found at the same date" });
 
                 }
                 if (other_exist != null)
                 {
                     return RedirectToAction("Properties_Detail", "Properties", new
                     {
-                        id = appointment.property_id,Message = "Appointment was booked by others"
+                        id = appointment.property_id,
+                        Message = "Appointment was booked by others"
                     });
                 }
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 ServiceController sc = new ServiceController();
-                var Message = "The appointment"+appointment.appointment_date+" "+appointment.hour+"was made by"+ _userManager.FindByIdAsync(appointment.user_id).Result.name;
+                var Message = "The appointment" + appointment.appointment_date + " " + appointment.hour + "was made by" + _userManager.FindByIdAsync(appointment.user_id).Result.name;
                 sc.Index(Message);
-               
+
             }
 
 
             return RedirectToAction("Properties_Detail", "Properties", new { id = appointment.property_id, Message = "The booking was made successful" });
-            }
-
-        // GET: Appointments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var appointment = await _context.Appointment.FindAsync(id);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
-            return View(appointment);
         }
 
-        // POST: Appointments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,user_id,property_id,appointment_date,hour,status")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, string status)
         {
-            if (id != appointment.id)
+            try
             {
-                return NotFound();
+                var appointment = _context.Appointment.Find(id);
+                appointment.status = status;
+                _context.Update(appointment);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
+            catch (DbUpdateConcurrencyException)
             {
-                try
-                {
-                    _context.Update(appointment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppointmentExists(appointment.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                throw;
             }
-            return View(appointment);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Appointments/Delete/5
@@ -173,14 +168,14 @@ namespace FindProperty.Views.Appointments
             {
                 return NotFound();
             }
-           
+
             var appointment = await _context.Appointment
                 .FirstOrDefaultAsync(m => m.id == id);
             if (appointment == null)
             {
                 return NotFound();
             }
-            
+
             return View(appointment);
         }
 
@@ -193,7 +188,7 @@ namespace FindProperty.Views.Appointments
             _context.Appointment.Remove(appointment);
             await _context.SaveChangesAsync();
             var customername = _userManager.FindByIdAsync(appointment.user_id).Result.name;
-            var Message = "The Appointment of " + appointment.appointment_date+ " " + appointment.hour + " was removed by " + customername;
+            var Message = "The Appointment of " + appointment.appointment_date + " " + appointment.hour + " was removed by " + customername;
             ServiceController sc = new ServiceController();
             sc.Index(Message);
             return RedirectToAction(nameof(View_Appointment));
@@ -204,11 +199,12 @@ namespace FindProperty.Views.Appointments
             return _context.Appointment.Any(e => e.id == id);
         }
 
-        public async Task<IActionResult> View_Appointment(){
+        public async Task<IActionResult> View_Appointment()
+        {
 
             var user_id = _userManager.GetUserId(HttpContext.User);
             var appointment = await _context.Appointment.Where(p => p.user_id == user_id).ToListAsync();
-            return View("View_Appointment",appointment);
+            return View("View_Appointment", appointment);
         }
     }
 }

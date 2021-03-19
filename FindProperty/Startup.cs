@@ -30,8 +30,6 @@ namespace FindProperty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ServiceController serviceController = new ServiceController();
-            serviceController.RegisterOnMessageHandlerAndReceiveMessages();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAzureClients(builder =>
@@ -42,7 +40,6 @@ namespace FindProperty
 
             services.AddDbContext<FindProperty1Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FindProperty1Context")));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

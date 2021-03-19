@@ -84,8 +84,6 @@ namespace FindProperty.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    ServiceController serviceController = new ServiceController();
-                    serviceController.RegisterOnMessageHandlerAndReceiveMessages();
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

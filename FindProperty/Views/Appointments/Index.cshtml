@@ -3,72 +3,92 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var searchString = ViewData["searchString"];
+    var date = ViewData["date"];
+    var status = ViewData["status"];
 }
-
-<h1>Index</h1>
-@{ if (ViewBag.appointmentMessage != null)
+@{ if (Enumerable.Any(ViewBag.appointmentMessage))
     {
-    <div>
-        @foreach (var item in ViewBag.appointmentMessage)
-        {
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                @item
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        }
-    </div>
+        <div class="overflow-auto" style="height:100px">
+            @foreach (var item in ViewBag.appointmentMessage)
+            {
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    @item
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary mt-3" role="alert">
+            No Notification
+        </div>
     }
 }
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.user_id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.property_id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.appointment_date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.hour)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.user_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.property_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.appointment_date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.hour)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
+<a asp-action="RegisterOnMessageHandlerAndReceiveMessages" asp-controller="Service" role="button" class="btn btn-secondary" asp-route-searchString="@searchString" asp-route-status="@status" asp-route-date="@date">Check Notification</a>
+
+<div class="text-center">
+    <img src="https://i.pinimg.com/originals/26/c4/d0/26c4d0a6a14c2a492bdfec84a3b28df7.jpg" style="width: 300px" />
+    <h2>Appointments</h2>
+</div>
+
+<form asp-action="Index" class="d-flex justify-content-center align-content-center px-5 mb-4">
+    <label class="mr-2">Search:</label>
+    <input type="text" class="form-control mr-2" name="searchString">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div class="d-flex">
+    <form asp-action="Index" class="d-flex mr-3">
+        <input type="hidden" name="searchString" value="@searchString" />
+        <input type="hidden" name="status" value="@status" />
+        <input id="dateInput" type="date" name="date" class="form-control" onchange="this.form.submit()" />
+    </form>
+    <a class="btn btn-primary" asp-action="Index" asp-route-searchString="@searchString" asp-route-status="@status" class="btn btn-primary" role="button">Show All Dates</a>
+
+    <form asp-action="Index" class="d-flex ml-auto">
+        <input type="hidden" name="searchString" value="@searchString" />
+        <input type="hidden" name="date" value="@date" />
+        <select class="custom-select mr-3" onchange="this.form.submit()" name="status" id="statusSelect">
+            <option selected value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+        </select>
+    </form>
+</div>
+
+@foreach (var item in Model)
+{
+    <div class="shadow p-3 rounded m-5 row">
+        <div class="col">
+            <h4>@Html.DisplayFor(modelItem => item.appointment_date)</h4>
+            <h6 class="text-black-50">@item.hour</h6>
+        </div>
+        <div class="col">
+            <h6 class="text-black-50">Property</h6>
+            <h4>@item.propertyTitle</h4>
+        </div>
+        <div class="col">
+            <h6 class="text-black-50">Customer</h6>
+            <h4>@item.customerName</h4>
+        </div>
+        <div class="col">
+            <h6 class="text-black-50">Status</h6>
+            <h4>@item.status</h4>
+        </div>
+        <div class="col-1 my-auto">
+            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-primary" role="button">Details</a>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+
+<script>
+    $("#statusSelect").val("@status");
+    if ("@date" != "0001-01-01") {
+        $("#dateInput").val("@date");
+    }
+</script>

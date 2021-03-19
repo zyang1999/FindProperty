@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var property = Model.property;
 }
 
 <h1>Details</h1>
@@ -10,40 +11,117 @@
 <div>
     <h4>Appointment</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.user_id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.user_id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.property_id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.property_id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.appointment_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.appointment_date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.hour)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.hour)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.status)
-        </dd>
-    </dl>
+    <div class="shadow rounded mb-5 container">
+        <div class="p-3 row">
+            <div class="col">
+                <h6 class="text-black-50">Appointment Date</h6>
+                <h4 class="mb-3">@Html.DisplayFor(modelItem => Model.appointment_date)</h4>
+                <h6 class="text-black-50">Time</h6>
+                <h4 class="mb-3">@Model.hour</h4>
+                <h6 class="text-black-50">Status</h6>
+                <h4>@Model.status</h4>
+            </div>
+            <div class="col">
+                <h6 class="text-black-50">Customer Name</h6>
+                <h4 class="mb-3">@Model.customer.name</h4>
+                <h6 class="text-black-50">Customer Phone Number</h6>
+                <h4 class="mb-3">@Model.customer.PhoneNumber</h4>
+                <h6 class="text-black-50">Customer Email</h6>
+                <h4 class="mb-3">@Model.customer.Email</h4>
+            </div>
+        </div>     
+    </div>
+    <div class="shadow rounded-sm mb-5 d-flex flex-wrap p-3">
+        <div id="imageCarousel" class="carousel slide mb-1 mr-3" data-bs-touch="false" data-bs-interval="false">
+            <ol class="carousel-indicators">
+                <li type="button" data-target="#imageCarousel" data-slide-to="0" class="active"></li>
+                @for (int i = 1; i < property.images.Count; i++)
+                {
+                    <li type="button" data-target="#imageCarousel" data-slide-to="@i"></li>
+                }
+            </ol>
+            <div class="carousel-inner rounded-sm imageContainer" style="background-color:lightgray;">
+                @for (int i = 0; i < property.images.Count(); i++)
+                {
+                    if (i == 0)
+                    {
+                        <div class="carousel-item active text-center align-middle justify-content-center imageContainer">
+                            <img src="@property.images[i]" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="carousel-item text-center align-middle imageContainer">
+                            <img src="@property.images[i]" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    }
+                }
+            </div>
+            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div>
+            <h4 class="card-title my-3">@property.type</h4>
+            <h4 class="card-title my-3">RM @property.fee</h4>
+            <div class="my-3">
+                <h4 mb-1 text-muted">@property.title</h4>
+                <h5>@property.address</h5>
+            </div>
+            <p class="card-subtitle my-3">@property.property_type | Built-up : @property.size sq. ft. | @property.furnishing</p>
+        </div>
+    </div>
+    <div class="shadow rounded mb-5 container">
+        <div class="card-body">
+            <h4 class="card-title my-3">Description</h4>
+            <p style="white-space: pre-wrap;">@property.description</p>
+        </div>
+    </div>
+    <div class="shadow rounded mb-5 container">
+        <div class="card-body">
+            <h4>Property Details</h4>
+            <hr />
+            <div class="row">
+                <div class="col">
+                    <label class="font-weight-bold">Property Type:</label>
+                    <p>@property.type</p>
+                    <label class="font-weight-bold">Built-up Size:</label>
+                    <p>@property.size sq. ft.</p>
+                </div>
+                <div class="col">
+                    <label class="font-weight-bold">Furnshing</label>
+                    <p>@property.furnishing</p>
+                    <label class="font-weight-bold">Posted Date:</label>
+                    <p>@property.created_at</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="shadow rounded mb-5 container">
+        <div class="card-body">
+            <h4>Agent</h4>
+            <hr />
+            <div style="height: 100px; width: 100px;" class="text-center">
+                <img src="@property.Agent.profile_picture" class="rounded-circle z-depth-2" style="max-height:100%; max-width: 100%" /><br />
+            </div>
+            <label class="font-weight-bold">Name:</label>
+            <p>@property.Agent.name</p>
+            <label class="font-weight-bold">Contact Number:</label>
+            <p>@property.Agent.phone_number</p>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model.status == "pending")
+    {
+        <a asp-action="Edit" asp-route-id="@Model.id" asp-route-status="approved" class="btn btn-primary">Approve</a>
+        <a asp-action="Edit" asp-route-id="@Model.id" asp-route-status="reject" class="btn btn-danger">Reject</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

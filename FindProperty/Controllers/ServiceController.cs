@@ -18,13 +18,12 @@ namespace FindProperty.Controllers
 
         const string ServiceBusConnectionString = "Endpoint=sb://servicebustp046685.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=asWb/NHtFsrxzISfC0BUN6iDWSawBm2+xem5O9Bpl1k=";
         const string QueueName = "appointmentqueue";
-        static IQueueClient queueClient;
         public static List<string> appointments = new List<string>();
+        public IQueueClient queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
 
         //Part 1: Send Message to the Service Bus
         public void Index(string Message)
-        {
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+        {      
             try
             {
                 CreateQueueFunctionAsync();
@@ -57,16 +56,18 @@ namespace FindProperty.Controllers
             }
         }
 
-        public void RegisterOnMessageHandlerAndReceiveMessages()
+        public ActionResult RegisterOnMessageHandlerAndReceiveMessages(string searchString, string status, DateTime date)
         {
 
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {
                 MaxConcurrentCalls = 1,
                 AutoComplete = false
             };
             queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            System.Threading.Thread.Sleep(3000);
+            queueClient.CloseAsync().Wait();
+            return RedirectToAction("Index", "Appointments", new { searchString, status, date});
         }
 
         public async Task ProcessMessagesAsync(Message message, CancellationToken token)
