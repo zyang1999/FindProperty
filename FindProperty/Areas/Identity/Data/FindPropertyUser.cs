@@ -14,8 +14,6 @@ namespace FindProperty.Areas.Identity.Data
         [PersonalData]
         public DateTime dob { get; set; }
         [PersonalData]
-        public string address { get; set; }
-        [PersonalData]
         public string role { get; set; }
     }
 }

@@ -30,8 +30,7 @@ namespace FindProperty.Controllers
             CloudStorageAccount objectaccount = CloudStorageAccount.Parse(configure["ConnectionStrings:BlobStorageConnection"]);
             CloudBlobClient blobclient = objectaccount.CreateCloudBlobClient();
             //step 2: how to create a new container in the blob storage account.
-            CloudBlobContainer container =
-           blobclient.GetContainerReference(blobRef);
+            CloudBlobContainer container = blobclient.GetContainerReference(blobRef);
 
             return container;
         }
@@ -86,12 +85,6 @@ namespace FindProperty.Controllers
         {
             CloudBlobContainer container = getBlobStorageInformation(blobRef);
             container.DeleteIfExistsAsync().Wait();
-        }
-
-        public void deleteBlockBlob (string blobRef, string storageRef)
-        {
-            getBlobStorageInformation(storageRef).GetBlockBlobReference(new CloudBlockBlob(new Uri(blobRef)).Name).DeleteIfExistsAsync().Wait();
-
         }
 
     }
