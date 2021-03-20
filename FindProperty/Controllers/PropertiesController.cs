@@ -291,25 +291,26 @@ namespace FindProperty.Views.Properties
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                properties = await _context.Property.Where(s => s.title.Contains(searchString)).ToListAsync();
+                properties = properties.Where(s => s.title.Contains(searchString)).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 properties = await _context.Property.Where(s => s.address.Contains(searchString)).ToListAsync();
             }
-
             if (!string.IsNullOrEmpty(propertyType))
             {
-                properties = await _context.Property.Where(x => x.property_type == propertyType).ToListAsync();
+                properties = properties.Where(x => x.property_type == propertyType).ToList();
             }
+
 
             foreach (var property in properties)
             {
                 setImages(property);
             }
-
-            ViewBag.PropertyType = new SelectList(await _context.Property.Select(x => x.property_type).ToListAsync());
+          
+            ViewBag.PropertyType = await _context.Property.Select(x => x.property_type).Distinct().ToListAsync();
+            ViewData["property_type"] = propertyType;
             return View("Properties",properties);
         }
 

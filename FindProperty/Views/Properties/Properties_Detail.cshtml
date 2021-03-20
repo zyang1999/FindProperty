@@ -4,11 +4,11 @@
 }
 @model Property
 
-<div class="card mb-3">
 
 
 
-    <div class="container" style="margin-bottom:100px;">
+
+    <div class="container" style="margin-bottom:10px;">
         <div class="row mt-3">
 
 
@@ -54,7 +54,7 @@
             </div>
 
 
-            <div class="col-md-5 ml-2 mt-3" style="background-color:white;max-height:450px;display:inline-block;border:1px solid #e2e2e2;">
+            <div class="col-md-5 ml-1 mt-3" style="background-color:white;max-height:450px;display:inline-block;border:1px solid #e2e2e2;">
                 <form action="../Appointments/Create" method="post">
                     @Html.AntiForgeryToken()
                     <h5 class="pt-2" style="font-weight:700;">@Model.title</h5>
@@ -141,25 +141,47 @@
 
 
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+        
+                <div class="card-body">
+                    <h4>Proprtey Detail</h4>
+                    <hr />
 
-    <div class="card mb-3">
-        <div class="card-body">
-            <h4>Agent</h4>
-            <hr />
-            <div style="height: 100px; width: 100px;" class="text-center">
-                <img src="@Model.Agent.profile_picture" class="rounded-circle z-depth-2" style="max-height:100%; max-width: 100%" /><br />
+                    <label>Property Type:</label>
+                    <p>@Model.property_type</p>
+                    <label>Size:</label>
+                    <p>@Model.size</p>
+                    <label>Furnishing:</label>
+                    <p>@Model.furnishing</p>
+                    <label>Posted Date:</label>
+                    <p>@Model.created_at</p>
+                    <label>Description:</label>
+                    <p>@Model.description</p>
+                </div>
             </div>
-            <label>Name:</label>
-            <p>@Model.Agent.name</p>
-            <label>Contact Number:</label>
-            <p>@Model.Agent.phone_number</p>
         </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4>Agent</h4>
+                        <hr />
+                        <div style="height: 100px; width: 100px;" class="text-center">
+                            <img src="@Model.Agent.profile_picture" class="rounded-circle z-depth-2" style="max-height:100%; max-width: 100%" /><br />
+                        </div>
+                        <label>Name:</label>
+                        <p>@Model.Agent.name</p>
+                        <label>Contact Number:</label>
+                        <p>@Model.Agent.phone_number</p>
+                    </div>
+                </div>
+            </div>
     </div>
-</div>
-@if (ViewBag.Message!= null)
+@if (ViewBag.Message != null)
 {
     <script>
-     alert("@ViewBag.Message");
+alert("@ViewBag.Message");
 
     </script>
 }

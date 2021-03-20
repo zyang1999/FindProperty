@@ -20,6 +20,18 @@ namespace FindProperty.Controllers
         const string QueueName = "appointmentqueue";
         public static List<string> appointments = new List<string>();
         public IQueueClient queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+         private static async Task CreateQueueFunctionAsync()
+        {
+            var managementClient = new ManagementClient(ServiceBusConnectionString);
+            bool queueExists = await managementClient.QueueExistsAsync(QueueName);
+            if (!queueExists)
+            {
+                QueueDescription qd = new QueueDescription(QueueName);
+                qd.MaxSizeInMB = 1024;
+                qd.MaxDeliveryCount = 10;
+                await managementClient.CreateQueueAsync(qd);
+            }
+        }
 
         //Part 1: Send Message to the Service Bus
         public void Index(string Message)
@@ -43,19 +55,7 @@ namespace FindProperty.Controllers
             }
         }
 
-        private static async Task CreateQueueFunctionAsync()
-        {
-            var managementClient = new ManagementClient(ServiceBusConnectionString);
-            bool queueExists = await managementClient.QueueExistsAsync(QueueName);
-            if (!queueExists)
-            {
-                QueueDescription qd = new QueueDescription(QueueName);
-                qd.MaxSizeInMB = 1024;
-                qd.MaxDeliveryCount = 10;
-                await managementClient.CreateQueueAsync(qd);
-            }
-        }
-
+       
         public ActionResult RegisterOnMessageHandlerAndReceiveMessages(string searchString, string status, DateTime date)
         {
 

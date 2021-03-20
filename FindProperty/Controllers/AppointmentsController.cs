@@ -136,7 +136,8 @@ namespace FindProperty.Views.Appointments
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 ServiceController sc = new ServiceController();
-                var Message = "The appointment" + appointment.appointment_date + " " + appointment.hour + "was made by" + _userManager.FindByIdAsync(appointment.user_id).Result.name;
+                var Message = "The appointment" + appointment.appointment_date + " " + appointment.hour + "was made by" +
+                    _userManager.FindByIdAsync(appointment.user_id).Result.name;
                 sc.Index(Message);
 
             }
