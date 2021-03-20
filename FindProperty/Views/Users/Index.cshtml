@@ -1,0 +1,41 @@
+﻿@model IEnumerable<FindProperty.Areas.Identity.Data.FindPropertyUser>
+
+<h1>Users</h1>
+@if (ViewBag.message != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.message
+    </div>
+}
+<a role="button" asp-action="Create" class="btn btn-primary">Create New Admin</a>
+<table id="table" class="table mt-3">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Role</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Email</td>
+                <td>@item.name</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.role</td>
+                <td>
+                    <a class="btn btn-primary" role="button" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-primary" role="button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#table').DataTable();
+</script>

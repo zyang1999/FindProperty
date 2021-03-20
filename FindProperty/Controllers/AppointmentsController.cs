@@ -136,7 +136,7 @@ namespace FindProperty.Views.Appointments
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 ServiceController sc = new ServiceController();
-                var Message = "The appointment" + appointment.appointment_date + " " + appointment.hour + "was made by" + _userManager.FindByIdAsync(appointment.user_id).Result.name;
+                var Message = _userManager.FindByIdAsync(appointment.user_id).Result.name + " has booked an appointment on "+ appointment.appointment_date.ToString("dd/MM/yyyy") + " " + appointment.hour ;
                 sc.Index(Message);
 
             }
@@ -188,7 +188,7 @@ namespace FindProperty.Views.Appointments
             _context.Appointment.Remove(appointment);
             await _context.SaveChangesAsync();
             var customername = _userManager.FindByIdAsync(appointment.user_id).Result.name;
-            var Message = "The Appointment of " + appointment.appointment_date + " " + appointment.hour + " was removed by " + customername;
+            var Message = "The Appointment of " + appointment.appointment_date.ToString("dd/MM/yyyy") + " " + appointment.hour + " was removed by " + customername;
             ServiceController sc = new ServiceController();
             sc.Index(Message);
             return RedirectToAction(nameof(View_Appointment));

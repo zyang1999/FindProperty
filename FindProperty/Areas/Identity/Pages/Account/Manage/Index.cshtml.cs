@@ -33,7 +33,8 @@ namespace FindProperty.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Phone]
+            [Required]
+            [RegularExpression("^(\\+?6?01)[0-46-9]-*[0-9]{7,8}$", ErrorMessage = "Please provide a valid phone number.")]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 

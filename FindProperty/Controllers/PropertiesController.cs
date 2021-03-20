@@ -40,8 +40,6 @@ namespace FindProperty.Views.Properties
         // GET: Properties
         public async Task<IActionResult> Index(string propertyType, string searchString, string sort, string type)
         {
-            ServiceController serviceController = new ServiceController();
-            serviceController.Index("asd");
             var properties = await _context.Property.ToListAsync();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -252,14 +250,6 @@ namespace FindProperty.Views.Properties
         private bool PropertyExists(int id)
         {
             return _context.Property.Any(e => e.id == id);
-        }
-
-        [HttpPost]
-        public void deleteImage(string image, int id)
-        {
-            var property = _context.Property.FindAsync(id).Result;
-            blobsController.deleteBlockBlob(image, property.imagePath);
-            setImages(property);
         }
 
         [Route("Property/{id}")]
