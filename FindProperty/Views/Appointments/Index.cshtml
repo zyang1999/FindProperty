@@ -28,7 +28,7 @@
         </div>
     }
 }
-<a asp-action="RegisterOnMessageHandlerAndReceiveMessages" asp-controller="Service" role="button" class="btn btn-secondary" asp-route-searchString="@searchString" asp-route-status="@status" asp-route-date="@date">Check Notification</a>
+<a asp-action="RegisterMessageHandler" asp-controller="Service" role="button" class="btn btn-secondary" asp-route-searchString="@searchString" asp-route-status="@status" asp-route-date="@date">Check Notification</a>
 
 <div class="text-center">
     <img src="https://i.pinimg.com/originals/26/c4/d0/26c4d0a6a14c2a492bdfec84a3b28df7.jpg" style="width: 300px" />
@@ -56,7 +56,7 @@
             <option selected value="">All</option>
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
+            <option value="reject">Rejected</option>
         </select>
     </form>
 </div>

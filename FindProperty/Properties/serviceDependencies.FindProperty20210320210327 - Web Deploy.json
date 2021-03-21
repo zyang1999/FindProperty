@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/findpropertydbserver2/databases/FindProperty_db",
+      "type": "mssql.azure",
+      "connectionId": "FindPropertyContextConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/findpropertydbserver2/databases/FindProperty_db",
+      "type": "mssql.azure",
+      "connectionId": "FindProperty1Context",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

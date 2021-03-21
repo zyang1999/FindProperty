@@ -3,12 +3,21 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>31c9fe6e-e77a-4cb5-8f12-3fe98493b1e3</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/ee12e184-46b5-4910-b8bc-bde77dc380bf/resourceGroups/findpropertystorageResourceGroup/providers/microsoft.insights/components/FindProperty20210320213329</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\FindProperty1\**" />
+    <Compile Remove="Migrations\FindProperty\**" />
     <Compile Remove="Views\NewFolder1\**" />
+    <Content Remove="Migrations\FindProperty1\**" />
+    <Content Remove="Migrations\FindProperty\**" />
     <Content Remove="Views\NewFolder1\**" />
+    <EmbeddedResource Remove="Migrations\FindProperty1\**" />
+    <EmbeddedResource Remove="Migrations\FindProperty\**" />
     <EmbeddedResource Remove="Views\NewFolder1\**" />
+    <None Remove="Migrations\FindProperty1\**" />
+    <None Remove="Migrations\FindProperty\**" />
     <None Remove="Views\NewFolder1\**" />
   </ItemGroup>
 
@@ -25,14 +34,12 @@
     <Compile Remove="Migrations\20210318104915_appointment_edit.Designer.cs" />
     <Compile Remove="Migrations\20210318105141_appointment_edit.cs" />
     <Compile Remove="Migrations\20210318105141_appointment_edit.Designer.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210308121800_AppointmentContext1.Designer.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210308132805_Appointment2Context.Designer.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210309114601_AgentContext.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210309114601_AgentContext.Designer.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210309121048_AgentContext2.cs" />
-    <Compile Remove="Migrations\FindProperty1\20210309121048_AgentContext2.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Migrations\FindProperty\20210320111356_Initial.cs" />
+    <Compile Include="Migrations\FindProperty\20210320111356_Initial.Designer.cs" />
+    <Compile Include="Migrations\FindProperty\FindPropertyContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +47,7 @@
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.1.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.2.0" />
     <PackageReference Include="Grpc.Core" Version="2.36.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.12" />
@@ -54,11 +62,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="WindowsAzure.ServiceBus" Version="6.0.4" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\FindProperty1\" />
-    <Folder Include="Migrations\FindProperty\" />
   </ItemGroup>
 
 </Project>

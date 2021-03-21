@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindProperty.Migrations
 {
     [DbContext(typeof(FindProperty1Context))]
-    [Migration("20210310141743_AppointmentContext")]
-    partial class AppointmentContext
+    [Migration("20210320110240_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -67,6 +67,8 @@ namespace FindProperty.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("property_id");
 
                     b.ToTable("Appointment");
                 });
@@ -125,10 +127,19 @@ namespace FindProperty.Migrations
                     b.ToTable("Property");
                 });
 
+            modelBuilder.Entity("FindProperty.Models.Appointment", b =>
+                {
+                    b.HasOne("FindProperty.Models.Property", "property")
+                        .WithMany()
+                        .HasForeignKey("property_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FindProperty.Models.Property", b =>
                 {
                     b.HasOne("FindProperty.Models.Agent", "Agent")
-                        .WithMany()
+                        .WithMany("Properties")
                         .HasForeignKey("AgentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

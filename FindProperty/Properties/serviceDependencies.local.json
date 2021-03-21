@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql.local",
-      "connectionId": "FindPropertyContextConnection"
-    },
     "secrets1": {
       "type": "secrets.user"
     },
@@ -13,14 +9,16 @@
       "connectionId": "findproperty",
       "secretStore": "LocalSecretsFile"
     },
-    "mssql2": {
-      "type": "mssql.local",
-      "connectionId": "FindProperty1Context"
-    },
     "storage2": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/findpropertystorage",
       "type": "storage.azure",
       "connectionId": "BlobStorageConnection",
+      "secretStore": "LocalSecretsFile"
+    },
+    "appInsights1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/FindProperty20210320213329",
+      "type": "appInsights.azure",
+      "connectionId": "APPINSIGHTS_CONNECTIONSTRING",
       "secretStore": "LocalSecretsFile"
     }
   }

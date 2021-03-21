@@ -38,7 +38,7 @@ namespace FindProperty.Controllers
         {      
             try
             {
-                CreateQueueFunctionAsync();
+                CreateQueueFunctionAsync().Wait();
                 string messageBody = Message;
                 var message = new Message(Encoding.UTF8.GetBytes(messageBody));
 
@@ -56,10 +56,9 @@ namespace FindProperty.Controllers
         }
 
        
-        public ActionResult RegisterOnMessageHandlerAndReceiveMessages(string searchString, string status, DateTime date)
+        public ActionResult RegisterMessageHandler(string searchString, string status, DateTime date)
         {
-
-            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionHandler)
             {
                 MaxConcurrentCalls = 1,
                 AutoComplete = false
@@ -72,20 +71,15 @@ namespace FindProperty.Controllers
 
         public async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
-            //var result = JsonConvert.DeserializeObject<Ostring>(Encoding.UTF8.GetString(message.Body));
-            // Console.WriteLine($"Appointment ID: is {result.OrderId}, Order name is {result.OrderName} and quantity is {result.OrderQuantity}");
-            //Console.WriteLine($"Date: {result.date}");
-            //Console.WriteLine($"Time: {result.hour}");
-            //Console.WriteLine($"User Name: {result.user.name}");
             Console.WriteLine($"{Encoding.UTF8.GetString(message.Body)}");
             await queueClient.CompleteAsync(message.SystemProperties.LockToken);
             appointments.Add(Encoding.UTF8.GetString(message.Body));
         }
 
-        public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        public Task ExceptionHandler(ExceptionReceivedEventArgs exceptionMessage)
         {
-            Console.WriteLine($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            Console.WriteLine($"Message handler encountered an exception {exceptionMessage.Exception}.");
+            var context = exceptionMessage.ExceptionReceivedContext;
             Console.WriteLine("Exception context for troubleshooting:");
             Console.WriteLine($"- Endpoint: {context.Endpoint}");
             Console.WriteLine($"- Entity Path: {context.EntityPath}");

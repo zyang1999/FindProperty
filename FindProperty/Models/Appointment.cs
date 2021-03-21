@@ -14,7 +14,6 @@ namespace FindProperty.Models
         [ForeignKey("FindPropertyUser")]
         public string user_id { get; set; }
 
-        [ForeignKey("property_id")]
         public int property_id { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]

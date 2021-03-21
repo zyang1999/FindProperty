@@ -37,7 +37,7 @@ namespace FindProperty.Views.Appointments
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                appointments = appointments.Where(x => x.propertyTitle.Contains(searchString.ToLower())|| x.customerName.ToLower().Contains(searchString.ToLower())).ToList();
+                appointments = appointments.Where(x => x.propertyTitle.ToLower().Contains(searchString.ToLower())|| x.customerName.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             if (!string.IsNullOrEmpty(status))

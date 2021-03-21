@@ -10,6 +10,7 @@ namespace FindProperty.Models
     public class User
     {
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         [RegularExpression("(?i)^[a-z ,.'-]+$", ErrorMessage ="Please provide a valid name")]

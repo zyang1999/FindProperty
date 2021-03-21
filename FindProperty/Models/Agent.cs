@@ -14,6 +14,7 @@ namespace FindProperty.Models
         public int AgentID { get; set; }
         
         [Required]
+        [RegularExpression("(?i)^[a-z ,.'-]+$", ErrorMessage = "Please provide a valid name")]
         [DisplayName("Name")]
         public string name { get; set; }
 

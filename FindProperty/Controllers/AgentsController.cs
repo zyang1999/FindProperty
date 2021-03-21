@@ -32,7 +32,7 @@ namespace FindProperty.Views.Agents
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                agents = agents.Where(x => x.name == searchString || x.phone_number == searchString).ToList();
+                agents = agents.Where(x => x.name.ToLower().Contains(searchString.ToLower()) || x.phone_number.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             foreach (var agent in agents)
@@ -142,6 +142,7 @@ namespace FindProperty.Views.Agents
                 }
                 return RedirectToAction(nameof(Index));
             }
+            agent.profilePreview = blobsController.getBlockBlobs(agent.profile_picture).First().Uri.ToString();
             return View(agent);
         }
 

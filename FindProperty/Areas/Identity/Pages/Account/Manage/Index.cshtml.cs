@@ -40,6 +40,7 @@ namespace FindProperty.Areas.Identity.Pages.Account.Manage
 
             [Required]
             [DataType(DataType.Text)]
+            [RegularExpression("(?i)^[a-z ,.'-]+$", ErrorMessage = "Please provide a valid name")]
             [Display(Name = "Full name")]
             public string name { get; set; }
 

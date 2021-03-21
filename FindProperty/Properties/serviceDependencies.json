@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "FindPropertyContextConnection"
-    },
     "secrets1": {
       "type": "secrets"
     },
@@ -11,13 +7,21 @@
       "type": "storage",
       "connectionId": "findproperty"
     },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "FindProperty1Context"
-    },
     "storage2": {
       "type": "storage",
       "connectionId": "BlobStorageConnection"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "FindPropertyContextConnection"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "FindProperty1Context"
+    },
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": "APPINSIGHTS_CONNECTIONSTRING"
     }
   }
 }

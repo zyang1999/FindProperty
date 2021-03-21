@@ -44,12 +44,7 @@ namespace FindProperty.Views.Properties
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                properties = properties.Where(s => s.title.Contains(searchString)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                properties = await _context.Property.Where(s => s.address.Contains(searchString)).ToListAsync();
+                properties = properties.Where(s => s.title.ToLower().Contains(searchString.ToLower()) || s.address.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             if (!string.IsNullOrEmpty(propertyType))

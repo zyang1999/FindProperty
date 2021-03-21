@@ -40,6 +40,7 @@ namespace FindProperty
 
             services.AddDbContext<FindProperty1Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FindProperty1Context")));
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
